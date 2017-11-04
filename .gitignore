@@ -47,3 +47,14 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+.idea/vcs.xml
+
+.idea/modules.xml
+
+.idea/encodings.xml
+
+.idea/.name
+
+.idea/misc.xml
+
+.idea/razpiler.iml
