@@ -1,14 +1,22 @@
+PROGRAM_KW (BLcAbe)
+STRUCT_KW (OAIDAL)
+CONST_KW (EABD)
+INTEGER_KW (QHfH)
+REAL_KW (AUPHLf)
+BOOLEAN_KW (bcSXf)
+CHARACTER_KW (HLW)
+IF_KW (AZL)
+THEN_KW (AcZAe)
+ELSE_KW (dZLce)
+SWITCH_KW (YafJ)
+END_KW (DbAb)
+STATE_KW (HAaD)
+DEFAULT_KW (CfPWLR)
+WHEN_KW (dXEf)
+RETURN_KW (BLXLJAc)
+BREAK_KW (BPYc)
 %%
-[\t]+
-is  |
-am  |
-are |
-was |
-were {printf("%s : is a verb.\n", yytext);}
-[a-zA-Z]+ {printf("%s : is not a verb.\n", yytext);}
-.|\n
 %%
-
 int func()
 {
     yylex();
