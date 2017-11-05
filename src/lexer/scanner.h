@@ -7,8 +7,6 @@
 #include <stdio.h>
 #include <wchar.h>
 
-#define FILE_CANNOT_BE_OPEN_ERR 100
-
 /**
  * Structure of the lines to load from the file
  */
@@ -24,7 +22,7 @@ typedef struct FileLine{
  * @param file_path
  * @return
  */
-int scan_file(char *file_path);
+FileLine *scan_file(char *);
 
 
 
