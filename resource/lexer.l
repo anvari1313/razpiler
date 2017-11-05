@@ -42,6 +42,17 @@ COMMENT ((\/\*)[^(\/\*)]+(\*\/))|((\/\/)[^(\n)]*)
 {CONST_CHAR} {printf("%s is CONST CHAR\n", yytext);}
 {COMMENT} {printf("%s COMMENT FOUND!\n", yytext);}
 %%
+
+typedef struct Lexeme
+{
+    wchar_t *value;
+    unsigned char type;
+    long long column;
+    FileLine *file_line;
+    int symbol_table_id;
+    struct Lexeme *next;
+}Lexeme;
+
 int func()
 {
     yylex();
