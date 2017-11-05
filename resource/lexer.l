@@ -21,7 +21,26 @@ AND_KW (e)
 NOT_KW (JbBX)
 XOR_KW (gB eaMdf)
 ANDTHEN_KW (e fcHdgd)
+
+SEMICOLON [;]
+COLON [:]
+COMMA [,]
+
+WHITESPACE [\t' '\n]
+CHARACTER [A-Za-f]
+DIGIT [0-9]
+CHARACTER_DIGIT {CHARACTER}|{DIGIT}
+IDENTIFIER {CHARACTER}{CHARACTER_DIGIT}*
+NUMBER {DIGIT}+
+CONST_CHAR [\'][\\]?{CHARACTER}[\']
+
+COMMENT ((\/\*)[^(\/\*)]+(\*\/))|((\/\/)[^(\n)]*)
 %%
+{PROGRAM_KW} {printf("%s Keyword found\n", yytext);}
+{IDENTIFIER} {printf("\'%s\' is IDENTIFIER\n", yytext);}
+{NUMBER} {printf("\'%s\' is NUMBER\n", yytext);}
+{CONST_CHAR} {printf("%s is CONST CHAR\n", yytext);}
+{COMMENT} {printf("%s COMMENT FOUND!\n", yytext);}
 %%
 int func()
 {
