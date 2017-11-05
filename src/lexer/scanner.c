@@ -12,7 +12,7 @@
 
 void enlarge_buffer(wchar_t **, size_t *);      //  Make the buffer of reading line larger
 void new_line(wchar_t *, size_t, long long, FILE *);    //  Add new node to lines linked list
-void separate_lines(FILE *);                    //  Read the file and separate it to lines
+FileLine *separate_lines(FILE *);                    //  Read the file and separate it to lines
 
 
 
@@ -20,18 +20,18 @@ FileLine *start_line_pointer;       // Pointer to first node of linked list of f
 FileLine *current_line_pointer;     // Pointer to first node of linked list of file's lines
 
 
-int scan_file(char *file_path)
+FileLine *scan_file(char *file_path)
 {
     FILE *file;
     file = fopen(file_path, "r");
 
     if (file == NULL)   // If any error occurred in opening the file
-        return FILE_CANNOT_BE_OPEN_ERR;
+        return NULL;
 
-    separate_lines(file);
+    return separate_lines(file);
 }
 
-void separate_lines(FILE *file)
+FileLine *separate_lines(FILE *file)
 {
     // Setting the pointers of first and current node of linked list to NULL
     start_line_pointer = (FileLine *)malloc(sizeof(FileLine));
@@ -53,36 +53,48 @@ void separate_lines(FILE *file)
     {
         if (IS_NEWLINE(c))
         {
-            new_line(buffer, buffer_used, line_num, file);
+            buffer[buffer_used] = L'\0';
+            if (wcslen(buffer) != 0)
+                new_line(buffer, buffer_used, line_num, file);
+            line_num++;
             buffer_size = INIT_BUFFER_SIZE;
             free(buffer);
             buffer = BUFFER_ALLOC(buffer_size);
+            buffer_used = 0;
         }
         else
         {
             buffer[buffer_used++] = c;
             if (buffer_used == buffer_size) enlarge_buffer(&buffer, &buffer_size); // Largest buffer should be allocated
-            putwchar(c);
         }
     }
 
+    if (wcslen(buffer) != 0) new_line(buffer, buffer_used, line_num, file);
+    free(buffer);
+
     fclose(file);
+
+    return start_line_pointer;
 }
 
 void enlarge_buffer(wchar_t **buffer, size_t *buffer_size)
 {
     wchar_t *new_buffer = BUFFER_ALLOC((*buffer_size) *= 2);
     memcpy(new_buffer, (*buffer), (*buffer_size) / 2);
+    new_buffer[(*buffer_size) / 2] = L'\0';
     free((*buffer));
+    (*buffer) = new_buffer;
 }
 
 void new_line(wchar_t *line_content, size_t line_size, long long line_num, FILE * file)
 {
     FileLine *node = LINE_ALLOC();
+    node->line_content = (wchar_t *)malloc((line_size + 1) * sizeof(wchar_t));
     wcsncpy(node->line_content, line_content, line_size);
     node->line_num = line_num;
     node->file = file;
     node->next_line = NULL;
 
     current_line_pointer->next_line = node;
+    current_line_pointer = node;
 }
