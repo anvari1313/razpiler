@@ -1,4 +1,6 @@
 #include "pp.h"
+#include <malloc.h>
+#include <wchar.h>
 
 char map_to_english(wchar_t c)
 {
@@ -145,4 +147,14 @@ char map_to_english(wchar_t c)
     }
 
     return result;
+}
+
+char *preprocess_line(FileLine *file_line)
+{
+    char *preprocessed_line = (char *)malloc(wcslen(file_line->line_content) * sizeof(char));
+    size_t index = 0;
+    char c;
+    while(c = map_to_english(file_line->line_content[index]))
+        preprocessed_line[index++] = c;
+    return preprocessed_line;
 }
