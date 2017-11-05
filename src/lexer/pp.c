@@ -1,5 +1,4 @@
 #include "pp.h"
-#include <wchar.h>
 
 char map_to_english(wchar_t c)
 {
@@ -90,17 +89,20 @@ char map_to_english(wchar_t c)
         case L'ل':
             result = 'b';
             break;
-        case L'ن':
+        case L'م':
             result = 'c';
             break;
-        case L'و':
+        case L'ن':
             result = 'd';
             break;
-        case L'ه':
+        case L'و':
             result = 'e';
             break;
-        case L'ی':
+        case L'ه':
             result = 'f';
+            break;
+        case L'ی':
+            result = 'g';
             break;
         case L'۰':
             result = '0';
