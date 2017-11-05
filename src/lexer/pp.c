@@ -141,7 +141,7 @@ char map_to_english(wchar_t c)
             result = ';';
             break;
         default:
-            result = ' ';
+            result = c;
     }
 
     return result;
