@@ -15,6 +15,12 @@ DEFAULT_KW (FgQXMS)
 WHEN_KW (eYEg)
 RETURN_KW (CMaMKBd)
 BREAK_KW (CQZd)
+
+OR_KW (gB)
+AND_KW (e)
+NOT_KW (JbBX)
+XOR_KW (gB eaMdf)
+ANDTHEN_KW (e fcHdgd)
 %%
 %%
 int func()
