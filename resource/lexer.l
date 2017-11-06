@@ -33,6 +33,16 @@ SEMICOLON [;]
 COLON [:]
 COMMA [,]
 
+LT_OP (\<)
+GT_OP (\>)
+EQ_OP (\=)
+PLUS_OP (\+)
+MINUS_OP (\-)
+MULTIPLY_OP (\*)
+DIVIDE_OP (\/)
+QUESTIONMARK_OP (\?)
+
+
 WHITESPACE [\t' '\n]
 CHARACTER [A-Za-f]
 DIGIT [0-9]
