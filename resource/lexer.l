@@ -1,3 +1,29 @@
+%{
+    #include "lexer.h"
+
+    FileLine *current_line_pointer = NULL;
+    long long column = 0;
+
+    void add_node(char *value, unsigned char type)
+    {
+        Lexeme *node = (Lexeme *)malloc(sizeof(Lexeme));
+
+        node->value = value;
+        node->type = type;
+        node->column = column;
+        node->file_line = current_line_pointer;
+
+        if (output == NULL) {
+            output->next = node;
+        } else {
+            current_lexeme_pointer->next = node;
+            current_lexeme_pointer = node;
+        }
+        column += yyleng;
+    }
+%}
+COMMENT ((\/\*)[^(\/\*)]+(\*\/))|((\/\/)[^(\n)]*)
+
 PROGRAM_KW (CMdBcf)
 STRUCT_KW (PBJEBM)
 CONST_KW (FBCE)
@@ -19,12 +45,26 @@ BREAK_KW (CQZd)
 OR_KW (gB)
 AND_KW (e)
 NOT_KW (JbBX)
-XOR_KW (gB eaMdf)
-ANDTHEN_KW (e fcHdgd)
+XOR_KW (gBeaMdf)
+ANDTHEN_KW (efcHdgd)
 
 SEMICOLON [;]
 COLON [:]
 COMMA [,]
+OPEN_BRACKET (\[)
+CLOSE_BRACKET (\])
+OPEN_CURLY_BRACES (\{)
+CLOSE_CURLY_BRACES (\})
+
+LT_OP (\<)
+GT_OP (\>)
+EQ_OP (\=)
+PLUS_OP (\+)
+MINUS_OP (\-)
+MULTIPLY_OP (\*)
+DIVIDE_OP (\/)
+QUESTIONMARK_OP (\?)
+
 
 WHITESPACE [\t' '\n]
 CHARACTER [A-Za-f]
@@ -33,18 +73,63 @@ CHARACTER_DIGIT {CHARACTER}|{DIGIT}
 IDENTIFIER {CHARACTER}{CHARACTER_DIGIT}*
 NUMBER {DIGIT}+
 CONST_CHAR [\'][\\]?{CHARACTER}[\']
-
-COMMENT ((\/\*)[^(\/\*)]+(\*\/))|((\/\/)[^(\n)]*)
-%%
-{PROGRAM_KW} {printf("%s Keyword found\n", yytext);}
-{IDENTIFIER} {printf("\'%s\' is IDENTIFIER\n", yytext);}
-{NUMBER} {printf("\'%s\' is NUMBER\n", yytext);}
-{CONST_CHAR} {printf("%s is CONST CHAR\n", yytext);}
-{COMMENT} {printf("%s COMMENT FOUND!\n", yytext);}
 %%
 
-int func()
+{OR_KW} {add_node(yytext, TYPE_OR_KW);}
+{AND_KW} {add_node(yytext, TYPE_AND_KW);}
+{NOT_KW} {add_node(yytext, TYPE_NOT_KW);}
+{XOR_KW} {add_node(yytext, TYPE_XOR_KW);}
+{ANDTHEN_KW} {add_node(yytext, TYPE_ANDTHEN_KW);}
+
+{SEMICOLON} {add_node(yytext, TYPE_SEMICOLON);}
+{COLON} {add_node(yytext, TYPE_COLON);}
+{COMMA} {add_node(yytext, TYPE_COMMA);}
+{OPEN_BRACKET} {add_node(yytext, TYPE_OPEN_BRACKET);}
+{CLOSE_BRACKET} {add_node(yytext, TYPE_CLOSE_BRACKET);}
+{OPEN_CURLY_BRACES} {add_node(yytext, TYPE_OPEN_CURLY_BRACES);}
+{CLOSE_CURLY_BRACES} {add_node(yytext, TYPE_CLOSE_CURLY_BRACES);}
+
+{LT_OP} {add_node(yytext, TYPE_LT_OP);}
+{GT_OP} {add_node(yytext, TYPE_GT_OP);}
+{EQ_OP} {add_node(yytext, TYPE_EQ_OP);}
+{PLUS_OP} {add_node(yytext, TYPE_PLUS_OP);}
+{MINUS_OP}  {add_node(yytext, TYPE_MINUS_OP);}
+{MULTIPLY_OP} {add_node(yytext, TYPE_MULTIPLY_OP);}
+{DIVIDE_OP} {add_node(yytext, TYPE_DIVIDE_OP);}
+{QUESTIONMARK_OP} {add_node(yytext, TYPE_QUESTIONMARK_OP);}
+
+
+{PROGRAM_KW} {add_node(yytext, TYPE_PROGRAM_KW);}
+{STRUCT_KW} {add_node(yytext, TYPE_STRUCT_KW);}
+{CONST_KW} {add_node(yytext, TYPE_CONST_KW);}
+{INTEGER_KW} {add_node(yytext, TYPE_INTEGER_KW);}
+{REAL_KW} {add_node(yytext, TYPE_REAL_KW);}
+{BOOLEAN_KW} {add_node(yytext, TYPE_BOOLEAN_KW);}
+{CHARACTER_KW} {add_node(yytext, TYPE_CHARACTER_KW);}
+{IF_KW} {add_node(yytext, TYPE_IF_KW);}
+{THEN_KW} {add_node(yytext, TYPE_THEN_KW);}
+{ELSE_KW} {add_node(yytext, TYPE_ELSE_KW);}
+{SWITCH_KW} {add_node(yytext, TYPE_SWITCH_KW);}
+{END_KW} {add_node(yytext, TYPE_END_KW);}
+{STATE_KW} {add_node(yytext, TYPE_STATE_KW);}
+{DEFAULT_KW} {add_node(yytext, TYPE_DEFAULT_KW);}
+{WHEN_KW} {add_node(yytext, TYPE_WHEN_KW);}
+{RETURN_KW} {add_node(yytext, TYPE_RETURN_KW);}
+{BREAK_KW} {add_node(yytext, TYPE_BREAK_KW);}
+
+
+{WHITESPACE} { column += yyleng; }
+{IDENTIFIER} {add_node(yytext, TYPE_IDENTIFIER);}
+{NUMBER} {add_node(yytext, TYPE_NUMBER);}
+{CONST_CHAR} {add_node(yytext, TYPE_CONST_CHAR);}
+%%
+
+int func(char *string, FileLine *fileLine)
 {
+    current_line_pointer = fileLine;
+
+    yy_scan_buffer(string, sizeof(string));
     yylex();
+
     return 0;
 }
