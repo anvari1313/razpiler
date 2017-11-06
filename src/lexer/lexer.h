@@ -5,42 +5,42 @@
 #ifndef RAZPILER_LEXER_H
 #define RAZPILER_LEXER_H
 
-#define TYPE_PROGRAM_KW 0
-#define TYPE_STRUCT_KW 1
-#define CONST_KW 2
-#define INTEGER_KW 3
-#define REAL_KW 4
-#define BOOLEAN_KW 5
-#define CHARACTER_KW 6
-#define IF_KW 7
-#define THEN_KW 8
-#define ELSE_KW 9
-#define SWITCH_KW 10
-#define END_KW 11
-#define STATE_KW 12
-#define DEFAULT_KW 13
-#define WHEN_KW 14
-#define RETURN_KW 15
-#define BREAK_KW 16
+#define TYPE_PROGRAM_KW '0'
+#define TYPE_STRUCT_KW '1'
+#define TYPE_CONST_KW '2'
+#define TYPE_INTEGER_KW '3'
+#define TYPE_REAL_KW '4'
+#define TYPE_BOOLEAN_KW '5'
+#define TYPE_CHARACTER_KW '6'
+#define TYPE_IF_KW '7'
+#define TYPE_THEN_KW '8'
+#define TYPE_ELSE_KW '9'
+#define TYPE_SWITCH_KW '10'
+#define TYPE_END_KW '11'
+#define TYPE_STATE_KW '12'
+#define TYPE_DEFAULT_KW '13'
+#define TYPE_WHEN_KW '14'
+#define TYPE_RETURN_KW '15'
+#define TYPE_BREAK_KW '16'
 
-#define OR_KW 30
-#define AND_KW 31
-#define NOT_KW 32
-#define XOR_KW 33
-#define ANDTHEN_KW 34
+#define TYPE_OR_KW '30'
+#define TYPE_AND_KW '31'
+#define TYPE_NOT_KW '32'
+#define TYPE_XOR_KW '33'
+#define TYPE_ANDTHEN_KW '34'
 
-#define SEMICOLON 40
-#define COLON 41
-#define COMMA 42
+#define TYPE_SEMICOLON '40'
+#define TYPE_COLON '41'
+#define TYPE_COMMA '42'
 
-#define LT_OP 50
-#define GT_OP 51
-#define EQ_OP 52
-#define PLUS_OP 53
-#define MINUS_OP 54
-#define MULTIPLY_OP 55
-#define DIVIDE_OP 56
-#define QUESTIONMARK_OP 57
+#define TYPE_LT_OP '50'
+#define TYPE_GT_OP '51'
+#define TYPE_EQ_OP '52'
+#define TYPE_PLUS_OP '53'
+#define TYPE_MINUS_OP '54'
+#define TYPE_MULTIPLY_OP '55'
+#define TYPE_DIVIDE_OP '56'
+#define TYPE_QUESTIONMARK_OP '57'
 
 #include "scanner.h"
 
