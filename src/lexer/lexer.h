@@ -37,6 +37,10 @@
 #define TYPE_OPEN_CURLY_BRACES '45'
 #define TYPE_CLOSE_CURLY_BRACES '46'
 
+#define TYPE_OPEN_PARENTHESIS '47'
+#define TYPE_CLOSE_PARENTHESIS '48'
+#define TYPE_DOT '49'
+
 
 #define TYPE_LT_OP '50'
 #define TYPE_GT_OP '51'
@@ -50,7 +54,10 @@
 #define TYPE_IDENTIFIER '70'
 #define TYPE_NUMBER '71'
 #define TYPE_CONST_CHAR '72'
+#define TYPE_REAL_NUMBER '73'
 
+#define TYPE_BOOLEAN_FALSE '80'
+#define TYPE_BOOLEAN_TRUE '81'
 
 
 #include "scanner.h"

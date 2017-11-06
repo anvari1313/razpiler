@@ -51,10 +51,13 @@ ANDTHEN_KW (efcHdgd)
 SEMICOLON [;]
 COLON [:]
 COMMA [,]
-OPEN_BRACKET (\[)
-CLOSE_BRACKET (\])
-OPEN_CURLY_BRACES (\{)
-CLOSE_CURLY_BRACES (\})
+OPEN_BRACKET (\])
+CLOSE_BRACKET (\[)
+OPEN_CURLY_BRACES (\})
+CLOSE_CURLY_BRACES (\{)
+OPEN_PARENTHESIS (\))
+CLOSE_PARENTHESIS (\()
+DOT (\.)
 
 LT_OP (\<)
 GT_OP (\>)
@@ -65,6 +68,9 @@ MULTIPLY_OP (\*)
 DIVIDE_OP (\/)
 QUESTIONMARK_OP (\?)
 
+BOOLEAN_FALSE (WbT)
+BOOLEAN_TRUE (KMPE)
+
 
 WHITESPACE [\t' '\n]
 CHARACTER [A-Za-f]
@@ -72,6 +78,7 @@ DIGIT [0-9]
 CHARACTER_DIGIT {CHARACTER}|{DIGIT}
 IDENTIFIER {CHARACTER}{CHARACTER_DIGIT}*
 NUMBER {DIGIT}+
+REAL_NUMBER {DIGIT}+(.){DIGIT}+
 CONST_CHAR [\'][\\]?{CHARACTER}[\']
 %%
 
@@ -88,6 +95,9 @@ CONST_CHAR [\'][\\]?{CHARACTER}[\']
 {CLOSE_BRACKET} {add_node(yytext, TYPE_CLOSE_BRACKET);}
 {OPEN_CURLY_BRACES} {add_node(yytext, TYPE_OPEN_CURLY_BRACES);}
 {CLOSE_CURLY_BRACES} {add_node(yytext, TYPE_CLOSE_CURLY_BRACES);}
+{OPEN_PARENTHESIS} {add_node(yytext, TYPE_OPEN_PARENTHESIS);}
+{CLOSE_PARENTHESIS} {add_node(yytext, TYPE_CLOSE_PARENTHESIS);}
+{DOT} {add_node(yytext, TYPE_DOT);}
 
 {LT_OP} {add_node(yytext, TYPE_LT_OP);}
 {GT_OP} {add_node(yytext, TYPE_GT_OP);}
@@ -98,6 +108,8 @@ CONST_CHAR [\'][\\]?{CHARACTER}[\']
 {DIVIDE_OP} {add_node(yytext, TYPE_DIVIDE_OP);}
 {QUESTIONMARK_OP} {add_node(yytext, TYPE_QUESTIONMARK_OP);}
 
+{BOOLEAN_FALSE} {add_node(yytext, TYPE_BOOLEAN_FALSE);}
+{BOOLEAN_TRUE} {add_node(yytext, TYPE_BOOLEAN_TRUE);}
 
 {PROGRAM_KW} {add_node(yytext, TYPE_PROGRAM_KW);}
 {STRUCT_KW} {add_node(yytext, TYPE_STRUCT_KW);}
@@ -121,6 +133,7 @@ CONST_CHAR [\'][\\]?{CHARACTER}[\']
 {WHITESPACE} { column += yyleng; }
 {IDENTIFIER} {add_node(yytext, TYPE_IDENTIFIER);}
 {NUMBER} {add_node(yytext, TYPE_NUMBER);}
+{REAL_NUMBER} {add_node(yytext, TYPE_REAL_NUMBER);}
 {CONST_CHAR} {add_node(yytext, TYPE_CONST_CHAR);}
 %%
 
