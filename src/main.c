@@ -35,7 +35,7 @@ int main()
 //    }
 
 
-    FileLine *start = scan_file("/home/ahmad/Desktop/input.txt");
+    FileLine *start = scan_file("/Users/invisible/Desktop/raz.txt");
     FileLine *current = start->next_line;
     int min = 1750;
     while(current != NULL)

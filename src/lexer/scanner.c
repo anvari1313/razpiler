@@ -1,8 +1,8 @@
 #include "scanner.h"
-#include <malloc.h>
 #include <locale.h>
 #include <stdbool.h>
 #include <memory.h>
+#include <stdlib.h>
 
 #define IS_NEWLINE(c) ((c) == L'\n')? true:false            // Macro for checking if the char is newLine char
 #define BUFFER_ALLOC(size) (wchar_t *)malloc(size * sizeof(wchar_t))    // Macro for allocation of memory of buffer
