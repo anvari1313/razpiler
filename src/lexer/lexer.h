@@ -42,6 +42,12 @@
 #define TYPE_DIVIDE_OP '56'
 #define TYPE_QUESTIONMARK_OP '57'
 
+#define TYPE_IDENTIFIER '70'
+#define TYPE_NUMBER '71'
+#define TYPE_CONST_CHAR '72'
+
+
+
 #include "scanner.h"
 
 typedef struct Lexeme
