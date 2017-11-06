@@ -9,7 +9,7 @@
 
 typedef struct Lexeme
 {
-    wchar_t *value;
+    char *value;
     unsigned char type;
     long long column;
     FileLine *file_line;
