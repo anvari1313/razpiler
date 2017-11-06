@@ -35,22 +35,17 @@ int main()
 //    }
 
 
-    FileLine *start = scan_file("/home/ahmad/Desktop/input.txt");
+    FileLine *start = scan_file("/home/ahmad/Desktop/input2.txt");
     FileLine *current = start->next_line;
-    int min = 1750;
+
     while(current != NULL)
     {
 
-        if (min > current->line_content[0] && current->line_content[0] != 0) min = current->line_content[0];
 
-        if (min == 0)
-            wprintf(L"--%ls--\n", current->line_content);
-        else
-            wprintf(L"%ls - %ld - %c\n", current->line_content, hash_wchar(current->line_content[0]), map_to_english(current->line_content[0]));
+        wprintf(L"--%ls--|--%s--\n", current->line_content, preprocess_line(current));
         current = current->next_line;
     }
 
-    wprintf(L"%d\n", min);
     return EXIT_SUCCESS;
 }
 
