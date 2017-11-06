@@ -17,24 +17,6 @@ long hash_wchar(wchar_t c)
 
 int main()
 {
-
-
-//    char *locale = setlocale(LC_ALL, "");       // Set the locale for reading the persian characters
-//    wchar_t t[100];
-//    wchar_t a[100];
-//    wcsncpy(a, L"اینجا", 5);
-//    wcsncpy(t, a, 5);
-////    for (int i = 0; i < wcslen(a); ++i) {
-//
-//    if (wcslen(a) != wcslen(t)) {
-//        printf("%d %d", wcslen(a), wcslen(t));
-////        for (int i = 0; i < 5; ++i) {
-////            putwchar(t[i]);
-////        }
-//        return -1;
-//    }
-
-
     FileLine *start = scan_file("/home/ahmad/Desktop/input2.txt");
     FileLine *current = start->next_line;
 
