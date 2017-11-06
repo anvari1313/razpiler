@@ -2,6 +2,24 @@
     #include "lexer.h"
 
     FileLine *current_line_pointer = NULL;
+    long long column = 0;
+
+    void add_node(char *value, unsigned char type)
+    {
+        Lexeme *node = (Lexeme *)malloc(sizeof(Lexeme));
+
+        node->value = value;
+        node->type = type;
+        node->column = column;
+        node->file_line = current_line_pointer;
+
+        if (output == NULL) {
+            output->next = node;
+        } else {
+            current_lexeme_pointer->next = node;
+            current_lexeme_pointer = node;
+        }
+    }
 %}
 COMMENT ((\/\*)[^(\/\*)]+(\*\/))|((\/\/)[^(\n)]*)
 
@@ -51,7 +69,30 @@ IDENTIFIER {CHARACTER}{CHARACTER_DIGIT}*
 NUMBER {DIGIT}+
 CONST_CHAR [\'][\\]?{CHARACTER}[\']
 %%
+[^\n] { column++; }
+[\n] {column = 0;}
 
+{PROGRAM_KW} {add_node(yytext, TYPE_PROGRAM_KW);}
+{STRUCT_KW} {add_node(yytext, TYPE_STRUCT_KW);}
+{CONST_KW} {add_node(yytext, TYPE_CONST_KW);}
+{INTEGER_KW} {add_node(yytext, TYPE_INTEGER_KW);}
+{REAL_KW} {add_node(yytext, TYPE_REAL_KW);}
+{BOOLEAN_KW} {add_node(yytext, TYPE_BOOLEAN_KW);}
+{CHARACTER_KW} {add_node(yytext, TYPE_CHARACTER_KW);}
+{IF_KW} {add_node(yytext, TYPE_IF_KW);}
+{THEN_KW} {add_node(yytext, TYPE_THEN_KW);}
+{ELSE_KW} {add_node(yytext, TYPE_ELSE_KW);}
+{SWITCH_KW} {add_node(yytext, TYPE_SWITCH_KW);}
+{END_KW} {add_node(yytext, TYPE_END_KW);}
+{STATE_KW} {add_node(yytext, TYPE_STATE_KW);}
+{DEFAULT_KW} {add_node(yytext, TYPE_DEFAULT_KW);}
+{WHEN_KW} {add_node(yytext, TYPE_WHEN_KW);}
+{RETURN_KW} {add_node(yytext, TYPE_RETURN_KW);}
+{BREAK_KW} {add_node(yytext, TYPE_BREAK_KW);}
+
+{IDENTIFIER} {add_node(yytext, TYPE_IDENTIFIER);}
+{NUMBER} {add_node(yytext, TYPE_NUMBER);}
+{CONST_CHAR} {add_node(yytext, TYPE_CONST_CHAR);}
 %%
 
 int func(char *string, FileLine *fileLine)
@@ -62,21 +103,4 @@ int func(char *string, FileLine *fileLine)
     yylex();
 
     return 0;
-}
-
-void add_node(char *value, unsigned char type, long long column)
-{
-    Lexeme *node = (Lexeme *)malloc(sizeof(Lexeme));
-
-    node->value = value;
-    node->type = type;
-    node->column = column;
-    node->file_line = current_line_pointer;
-
-    if (output == NULL) {
-        output->next = node;
-    } else {
-        current_lexeme_pointer->next = node;
-        current_lexeme_pointer = node;
-    }
 }
