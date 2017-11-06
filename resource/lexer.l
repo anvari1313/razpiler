@@ -19,6 +19,7 @@
             current_lexeme_pointer->next = node;
             current_lexeme_pointer = node;
         }
+        column += yyleng;
     }
 %}
 COMMENT ((\/\*)[^(\/\*)]+(\*\/))|((\/\/)[^(\n)]*)
@@ -44,12 +45,16 @@ BREAK_KW (CQZd)
 OR_KW (gB)
 AND_KW (e)
 NOT_KW (JbBX)
-XOR_KW (gB eaMdf)
-ANDTHEN_KW (e fcHdgd)
+XOR_KW (gBeaMdf)
+ANDTHEN_KW (efcHdgd)
 
 SEMICOLON [;]
 COLON [:]
 COMMA [,]
+OPEN_BRACKET (\[)
+CLOSE_BRACKET (\])
+OPEN_CURLY_BRACES (\{)
+CLOSE_CURLY_BRACES (\})
 
 LT_OP (\<)
 GT_OP (\>)
@@ -69,8 +74,30 @@ IDENTIFIER {CHARACTER}{CHARACTER_DIGIT}*
 NUMBER {DIGIT}+
 CONST_CHAR [\'][\\]?{CHARACTER}[\']
 %%
-[^\n] { column++; }
-[\n] {column = 0;}
+
+{OR_KW} {add_node(yytext, TYPE_OR_KW);}
+{AND_KW} {add_node(yytext, TYPE_AND_KW);}
+{NOT_KW} {add_node(yytext, TYPE_NOT_KW);}
+{XOR_KW} {add_node(yytext, TYPE_XOR_KW);}
+{ANDTHEN_KW} {add_node(yytext, TYPE_ANDTHEN_KW);}
+
+{SEMICOLON} {add_node(yytext, TYPE_SEMICOLON);}
+{COLON} {add_node(yytext, TYPE_COLON);}
+{COMMA} {add_node(yytext, TYPE_COMMA);}
+{OPEN_BRACKET} {add_node(yytext, TYPE_OPEN_BRACKET);}
+{CLOSE_BRACKET} {add_node(yytext, TYPE_CLOSE_BRACKET);}
+{OPEN_CURLY_BRACES} {add_node(yytext, TYPE_OPEN_CURLY_BRACES);}
+{CLOSE_CURLY_BRACES} {add_node(yytext, TYPE_CLOSE_CURLY_BRACES);}
+
+{LT_OP} {add_node(yytext, TYPE_LT_OP);}
+{GT_OP} {add_node(yytext, TYPE_GT_OP);}
+{EQ_OP} {add_node(yytext, TYPE_EQ_OP);}
+{PLUS_OP} {add_node(yytext, TYPE_PLUS_OP);}
+{MINUS_OP}  {add_node(yytext, TYPE_MINUS_OP);}
+{MULTIPLY_OP} {add_node(yytext, TYPE_MULTIPLY_OP);}
+{DIVIDE_OP} {add_node(yytext, TYPE_DIVIDE_OP);}
+{QUESTIONMARK_OP} {add_node(yytext, TYPE_QUESTIONMARK_OP);}
+
 
 {PROGRAM_KW} {add_node(yytext, TYPE_PROGRAM_KW);}
 {STRUCT_KW} {add_node(yytext, TYPE_STRUCT_KW);}
@@ -90,6 +117,8 @@ CONST_CHAR [\'][\\]?{CHARACTER}[\']
 {RETURN_KW} {add_node(yytext, TYPE_RETURN_KW);}
 {BREAK_KW} {add_node(yytext, TYPE_BREAK_KW);}
 
+
+{WHITESPACE} { column += yyleng; }
 {IDENTIFIER} {add_node(yytext, TYPE_IDENTIFIER);}
 {NUMBER} {add_node(yytext, TYPE_NUMBER);}
 {CONST_CHAR} {add_node(yytext, TYPE_CONST_CHAR);}

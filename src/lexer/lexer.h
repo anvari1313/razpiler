@@ -32,6 +32,11 @@
 #define TYPE_SEMICOLON '40'
 #define TYPE_COLON '41'
 #define TYPE_COMMA '42'
+#define TYPE_OPEN_BRACKET '43'
+#define TYPE_CLOSE_BRACKET '44'
+#define TYPE_OPEN_CURLY_BRACES '45'
+#define TYPE_CLOSE_CURLY_BRACES '46'
+
 
 #define TYPE_LT_OP '50'
 #define TYPE_GT_OP '51'
