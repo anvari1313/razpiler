@@ -17,6 +17,9 @@ typedef struct Lexeme
     struct Lexeme *next;
 }Lexeme;
 
-int func();
+Lexeme *output = NULL;
+Lexeme *current_lexeme_pointer = NULL;
+
+int func(char *string, FileLine *fileLine);
 
 #endif //RAZPILER_LEXER_H
