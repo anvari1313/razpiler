@@ -20,6 +20,7 @@
             current_lexeme_pointer = node;
         }
         column += yyleng;
+        // ts
     }
 %}
 COMMENT ((\/\*)[^(\/\*)]+(\*\/))|((\/\/)[^(\n)]*)
