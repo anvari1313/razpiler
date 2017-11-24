@@ -9,7 +9,7 @@ int main()
 {
 
     char *locale = setlocale(LC_ALL, "");       // Set the locale for reading the persian characters
-    FileLine *start = scan_file("/home/ahmad/Desktop/input2.txt");
+    FileLine *start = scan_file("/Users/invisible/Desktop/input.txt");
 //    FileLine *current = start->next_line;
 //
 //    while(current != NULL)

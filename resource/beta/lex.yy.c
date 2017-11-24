@@ -529,6 +529,7 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "lexer.l"
 #line 2 "lexer.l"
+    #include "parser.tab.h"
 #define TYPE_PROGRAM_KW 1
 #define TYPE_STRUCT_KW 2
 #define TYPE_CONST_KW 3
@@ -590,8 +591,8 @@ char *yytext;
     {
         wprintf(L"%s\t%d\n", value, type);
     }
-#line 593 "lex.yy.c"
 #line 594 "lex.yy.c"
+#line 595 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -808,10 +809,10 @@ YY_DECL
 		}
 
 	{
-#line 122 "lexer.l"
+#line 124 "lexer.l"
 
 
-#line 814 "lex.yy.c"
+#line 815 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -870,246 +871,246 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 124 "lexer.l"
-{add_node(yytext, TYPE_OR_KW); return TYPE_OR_KW;}
+#line 126 "lexer.l"
+{add_node(yytext, TYPE_OR_KW); return OR_KW;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 125 "lexer.l"
-{add_node(yytext, TYPE_AND_KW); return TYPE_AND_KW;}
+#line 127 "lexer.l"
+{add_node(yytext, TYPE_AND_KW); return AND_KW;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 126 "lexer.l"
-{add_node(yytext, TYPE_NOT_KW); return TYPE_NOT_KW;}
+#line 128 "lexer.l"
+{add_node(yytext, TYPE_NOT_KW); return NOT_KW;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 127 "lexer.l"
-{add_node(yytext, TYPE_XOR_KW); return TYPE_XOR_KW;}
+#line 129 "lexer.l"
+{add_node(yytext, TYPE_XOR_KW); return XOR_KW;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 128 "lexer.l"
-{add_node(yytext, TYPE_ANDTHEN_KW); return TYPE_ANDTHEN_KW;}
+#line 130 "lexer.l"
+{add_node(yytext, TYPE_ANDTHEN_KW); return ANDTHEN_KW;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 130 "lexer.l"
-{add_node(yytext, TYPE_SEMICOLON); return TYPE_SEMICOLON;}
+#line 132 "lexer.l"
+{add_node(yytext, TYPE_SEMICOLON); return SEMICOLON;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 131 "lexer.l"
-{add_node(yytext, TYPE_COLON); return TYPE_COLON;}
+#line 133 "lexer.l"
+{add_node(yytext, TYPE_COLON); return COLON;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 132 "lexer.l"
-{add_node(yytext, TYPE_COMMA); return TYPE_COMMA;}
+#line 134 "lexer.l"
+{add_node(yytext, TYPE_COMMA); return COMMA;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 133 "lexer.l"
-{add_node(yytext, TYPE_OPEN_BRACKET); return TYPE_OPEN_BRACKET;}
+#line 135 "lexer.l"
+{add_node(yytext, TYPE_OPEN_BRACKET); return OPEN_BRACKET;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 134 "lexer.l"
-{add_node(yytext, TYPE_CLOSE_BRACKET); return TYPE_CLOSE_BRACKET;}
+#line 136 "lexer.l"
+{add_node(yytext, TYPE_CLOSE_BRACKET); return CLOSE_BRACKET;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 135 "lexer.l"
-{add_node(yytext, TYPE_OPEN_CURLY_BRACES); return TYPE_OPEN_CURLY_BRACES;}
+#line 137 "lexer.l"
+{add_node(yytext, TYPE_OPEN_CURLY_BRACES); return OPEN_CURLY_BRACES;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 136 "lexer.l"
-{add_node(yytext, TYPE_CLOSE_CURLY_BRACES); return TYPE_CLOSE_CURLY_BRACES;}
+#line 138 "lexer.l"
+{add_node(yytext, TYPE_CLOSE_CURLY_BRACES); return CLOSE_CURLY_BRACES;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 137 "lexer.l"
-{add_node(yytext, TYPE_OPEN_PARENTHESIS); return TYPE_OPEN_PARENTHESIS;}
+#line 139 "lexer.l"
+{add_node(yytext, TYPE_OPEN_PARENTHESIS); return OPEN_PARENTHESIS;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 138 "lexer.l"
-{add_node(yytext, TYPE_CLOSE_PARENTHESIS); return TYPE_CLOSE_PARENTHESIS;}
+#line 140 "lexer.l"
+{add_node(yytext, TYPE_CLOSE_PARENTHESIS); return CLOSE_PARENTHESIS;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 139 "lexer.l"
-{add_node(yytext, TYPE_DOT); return TYPE_DOT;}
+#line 141 "lexer.l"
+{add_node(yytext, TYPE_DOT); return DOT;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 141 "lexer.l"
-{add_node(yytext, TYPE_LT_OP); return TYPE_LT_OP;}
+#line 143 "lexer.l"
+{add_node(yytext, TYPE_LT_OP); return LT_OP;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 142 "lexer.l"
-{add_node(yytext, TYPE_GT_OP); return TYPE_GT_OP;}
+#line 144 "lexer.l"
+{add_node(yytext, TYPE_GT_OP); return GT_OP;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 143 "lexer.l"
-{add_node(yytext, TYPE_EQ_OP); return TYPE_EQ_OP;}
+#line 145 "lexer.l"
+{add_node(yytext, TYPE_EQ_OP); return EQ_OP;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 144 "lexer.l"
-{add_node(yytext, TYPE_PLUS_OP); return TYPE_PLUS_OP;}
+#line 146 "lexer.l"
+{add_node(yytext, TYPE_PLUS_OP); return PLUS_OP;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 145 "lexer.l"
-{add_node(yytext, TYPE_MINUS_OP); return TYPE_MINUS_OP;}
+#line 147 "lexer.l"
+{add_node(yytext, TYPE_MINUS_OP); return MINUS_OP;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 146 "lexer.l"
-{add_node(yytext, TYPE_MULTIPLY_OP); return TYPE_MULTIPLY_OP;}
+#line 148 "lexer.l"
+{add_node(yytext, TYPE_MULTIPLY_OP); return MULTIPLY_OP;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 147 "lexer.l"
-{add_node(yytext, TYPE_DIVIDE_OP); return TYPE_DIVIDE_OP;}
+#line 149 "lexer.l"
+{add_node(yytext, TYPE_DIVIDE_OP); return DIVIDE_OP;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 148 "lexer.l"
-{add_node(yytext, TYPE_QUESTIONMARK_OP); return TYPE_QUESTIONMARK_OP;}
+#line 150 "lexer.l"
+{add_node(yytext, TYPE_QUESTIONMARK_OP); return QUESTIONMARK_OP;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 150 "lexer.l"
-{add_node(yytext, TYPE_BOOLEAN_FALSE); return TYPE_BOOLEAN_FALSE;}
+#line 152 "lexer.l"
+{add_node(yytext, TYPE_BOOLEAN_FALSE); return BOOLEAN_FALSE;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 151 "lexer.l"
-{add_node(yytext, TYPE_BOOLEAN_TRUE); return TYPE_BOOLEAN_TRUE;}
+#line 153 "lexer.l"
+{add_node(yytext, TYPE_BOOLEAN_TRUE); return BOOLEAN_TRUE;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 153 "lexer.l"
-{add_node(yytext, TYPE_PROGRAM_KW); return TYPE_PROGRAM_KW;}
+#line 155 "lexer.l"
+{add_node(yytext, TYPE_PROGRAM_KW); return PROGRAM_KW;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 154 "lexer.l"
-{add_node(yytext, TYPE_STRUCT_KW); return TYPE_STRUCT_KW;}
+#line 156 "lexer.l"
+{add_node(yytext, TYPE_STRUCT_KW); return STRUCT_KW;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 155 "lexer.l"
-{add_node(yytext, TYPE_CONST_KW); return TYPE_CONST_KW;}
+#line 157 "lexer.l"
+{add_node(yytext, TYPE_CONST_KW); return CONST_KW;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 156 "lexer.l"
-{add_node(yytext, TYPE_INTEGER_KW); return TYPE_INTEGER_KW;}
+#line 158 "lexer.l"
+{add_node(yytext, TYPE_INTEGER_KW); return INTEGER_KW;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 157 "lexer.l"
-{add_node(yytext, TYPE_REAL_KW); return TYPE_REAL_KW;}
+#line 159 "lexer.l"
+{add_node(yytext, TYPE_REAL_KW); return REAL_KW;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 158 "lexer.l"
-{add_node(yytext, TYPE_BOOLEAN_KW); return TYPE_BOOLEAN_KW;}
+#line 160 "lexer.l"
+{add_node(yytext, TYPE_BOOLEAN_KW); return BOOLEAN_KW;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 159 "lexer.l"
-{add_node(yytext, TYPE_CHARACTER_KW); return TYPE_CHARACTER_KW;}
+#line 161 "lexer.l"
+{add_node(yytext, TYPE_CHARACTER_KW); return CHARACTER_KW;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 160 "lexer.l"
-{add_node(yytext, TYPE_IF_KW); return TYPE_IF_KW;}
+#line 162 "lexer.l"
+{add_node(yytext, TYPE_IF_KW); return IF_KW;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 161 "lexer.l"
-{add_node(yytext, TYPE_THEN_KW); return TYPE_THEN_KW;}
+#line 163 "lexer.l"
+{add_node(yytext, TYPE_THEN_KW); return THEN_KW;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 162 "lexer.l"
-{add_node(yytext, TYPE_ELSE_KW); return TYPE_ELSE_KW;}
+#line 164 "lexer.l"
+{add_node(yytext, TYPE_ELSE_KW); return ELSE_KW;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 163 "lexer.l"
-{add_node(yytext, TYPE_SWITCH_KW); return TYPE_SWITCH_KW;}
+#line 165 "lexer.l"
+{add_node(yytext, TYPE_SWITCH_KW); return SWITCH_KW;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 164 "lexer.l"
-{add_node(yytext, TYPE_END_KW); return TYPE_END_KW;}
+#line 166 "lexer.l"
+{add_node(yytext, TYPE_END_KW); return END_KW;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 165 "lexer.l"
-{add_node(yytext, TYPE_STATE_KW); return TYPE_STATE_KW;}
+#line 167 "lexer.l"
+{add_node(yytext, TYPE_STATE_KW); return STATE_KW;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 166 "lexer.l"
-{add_node(yytext, TYPE_DEFAULT_KW); return TYPE_DEFAULT_KW;}
+#line 168 "lexer.l"
+{add_node(yytext, TYPE_DEFAULT_KW); return DEFAULT_KW;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 167 "lexer.l"
-{add_node(yytext, TYPE_WHEN_KW); return TYPE_WHEN_KW;}
+#line 169 "lexer.l"
+{add_node(yytext, TYPE_WHEN_KW); return WHEN_KW;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 168 "lexer.l"
-{add_node(yytext, TYPE_RETURN_KW); return TYPE_RETURN_KW;}
+#line 170 "lexer.l"
+{add_node(yytext, TYPE_RETURN_KW); return RETURN_KW;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 169 "lexer.l"
-{add_node(yytext, TYPE_BREAK_KW); return TYPE_BREAK_KW;}
+#line 171 "lexer.l"
+{add_node(yytext, TYPE_BREAK_KW); return BREAK_KW;}
 	YY_BREAK
 case 43:
 /* rule 43 can match eol */
 YY_RULE_SETUP
-#line 172 "lexer.l"
+#line 174 "lexer.l"
 { column += yyleng; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 173 "lexer.l"
-{add_node(yytext, TYPE_IDENTIFIER); return TYPE_IDENTIFIER;}
+#line 175 "lexer.l"
+{add_node(yytext, TYPE_IDENTIFIER); return IDENTIFIER;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 174 "lexer.l"
-{add_node(yytext, TYPE_NUMBER); return TYPE_NUMBER;}
+#line 176 "lexer.l"
+{add_node(yytext, TYPE_NUMBER); return NUMBER;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 175 "lexer.l"
-{add_node(yytext, TYPE_REAL_NUMBER); return TYPE_REAL_NUMBER;}
+#line 177 "lexer.l"
+{add_node(yytext, TYPE_REAL_NUMBER); return REAL_NUMBER;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 176 "lexer.l"
-{add_node(yytext, TYPE_CONST_CHAR); return TYPE_CONST_CHAR; }
+#line 178 "lexer.l"
+{add_node(yytext, TYPE_CONST_CHAR); return CONST_CHAR; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 177 "lexer.l"
+#line 179 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1112 "lex.yy.c"
+#line 1113 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2114,7 +2115,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 177 "lexer.l"
+#line 179 "lexer.l"
 
 
 int start_lex()
