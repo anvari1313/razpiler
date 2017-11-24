@@ -37,8 +37,8 @@
 #define TYPE_OPEN_CURLY_BRACES 45
 #define TYPE_CLOSE_CURLY_BRACES 46
 
-#define TYPE_OPEN_PARENTHESIS '47'
-#define TYPE_CLOSE_PARENTHESIS '48'
+#define TYPE_OPEN_PARENTHESIS 47
+#define TYPE_CLOSE_PARENTHESIS 48
 #define TYPE_DOT 49
 
 
@@ -60,21 +60,14 @@
 #define TYPE_BOOLEAN_TRUE 81
 
 
-#include "scanner.h"
+#include "type.h"
 
-typedef struct Lexeme
-{
-    char *value;
-    unsigned char type;
-    long long column;
-    FileLine *file_line;
-    int symbol_table_id;
-    struct Lexeme *next;
-}Lexeme;
 
-Lexeme *output = NULL;
-Lexeme *current_lexeme_pointer = NULL;
+//Lexeme *output = NULL;
 
-int func(char *string, FileLine *fileLine);
+
+//void add_lexeme(unsigned char type);
+
+int start_lex(char *string, FileLine *fileLine);
 
 #endif //RAZPILER_LEXER_H
