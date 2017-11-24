@@ -5,6 +5,117 @@
     <title>Handy converter</title>
 </head>
 <script>
+    function to_persian(value) {
+        let result
+        
+        switch(value)
+        {
+            case 'A':
+            result = 'آ';
+            break;
+            case 'B':
+            result = 'ا';
+            break;
+            case 'C':
+            result = 'ب';
+            break;
+            case 'D':
+            result = 'پ';
+            break;
+            case 'E':
+            result = 'ت';
+            break;
+            case 'F':
+            result = 'ث';
+            break;
+            case 'G':
+            result = 'ج';
+            break;
+            case 'H':
+            result = 'چ';
+            break;
+            case 'I':
+            result = 'ح';
+            break;
+            case 'J':
+            result = 'خ';
+            break;
+            case 'K':
+            result = 'د';
+            break;
+            case '':
+            result = 'ذ';
+            break;
+            case 'M':
+            result = 'ر';
+            break;
+            case 'N':
+            result = 'ز';
+            break;
+            case 'O':
+            result = 'ژ';
+            break;
+            case 'P':
+            result = 'س';
+            break;
+            case 'Q':
+            result = 'ش';
+            break;
+            case 'R':
+            result = 'ص';
+            break;
+            case 'S':
+            result = 'ض';
+            break;
+            case 'T':
+            result = 'ط';
+            break;
+            case 'U':
+            result = 'ظ';
+            break;
+            case 'V':
+            result = 'ع';
+            break;
+            case 'W':
+            result = 'غ';
+            break;
+            case 'X':
+            result = 'ف';
+            break;
+            case 'Y':
+            result = 'ق';
+            break;
+            case 'Z':
+            result = 'ک';
+            break;
+            case 'a':
+            result = 'گ';
+            break;
+            case 'b':
+            result = 'ل';
+            break;
+            case 'c':
+            result = 'م';
+            break;
+            case 'd':
+            result = 'ن';
+            break;
+            case 'e':
+            result = 'و';
+            break;
+            case 'f':
+            result = 'ه';
+            break;
+            case 'g':
+            result = 'ی';
+            break;
+            default:
+            result = value;
+        }
+        
+        return result;
+    }
+    
     function replacer(value) {
         switch (value)
         {
@@ -42,7 +153,7 @@
             result = 'K';
             break;
             case 'ذ':
-            result = 'L';
+            result = '';
             break;
             case 'ر':
             result = 'M';
@@ -146,17 +257,24 @@
             default:
             result = value;
         }
-
+        
         return result;
     }
     function map() {
         let value = document.getElementById('input').value
         let result = ""
-        for (let i = 0; i < value.length; i++) {
-            result += replacer(value[i]);
+        
+        if(document.getElementById('mode').checked) {
+            for (let i = 0; i < value.length; i++) {
+                result += to_persian(value[i]);
+            }
+        } else {
+            for (let i = 0; i < value.length; i++) {
+                result += replacer(value[i]);
+            }
         }
-
-
+        
+        
         document.getElementById('answer').innerHTML = result
         
     }
@@ -169,7 +287,7 @@
         padding: 1em;
         top: 30%;
     }
-    .middle input {
+    .middle textarea {
         width: 100%;
     }
     .answer {
@@ -178,10 +296,11 @@
 </style>
 <body>
     <form class="middle" action="#">
-        <input type="text" id="input">
+        <textarea id="input" cols="30" rows="10"></textarea>
         <input type="submit" value="Convert" onclick="map()">
+        <input type="checkbox" value="to persian?" id="mode">
         <div class="answer">
-            <p id="answer"></p>
+            <pre id="answer"></pre>
         </div>
     </form>
     
