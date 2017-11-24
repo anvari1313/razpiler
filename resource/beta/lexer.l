@@ -1,4 +1,5 @@
 %{
+    #include "parser.tab.h"
 #define TYPE_PROGRAM_KW 1
 #define TYPE_STRUCT_KW 2
 #define TYPE_CONST_KW 3
@@ -56,27 +57,12 @@
 
     long long column = 0;
 
-    void post_process(char *input)
-    {
-        int i = 0;
-        char *output = malloc(sizeof(char) * 20);
-        while(input[i])
-        {
-            switch(input[i])
-            {
-                case 'A':
-                    output[i] = '';
-                    break;
-            }
-            i++;
-
-        }
-    }
     void add_node(char *value, unsigned char type)
     {
         wprintf(L"%s\t%d\n", value, type);
     }
 %}
+
 COMMENT ((\/\*)[^(\/\*)]+(\*\/))|((\/\/)[^(\n)]*)
 
 PROGRAM_KW (CMdBcf)
@@ -137,59 +123,59 @@ REAL_NUMBER {DIGIT}+(.){DIGIT}+
 CONST_CHAR [\'][\\]?{CHARACTER}[\']
 %%
 
-{OR_KW} {add_node(yytext, TYPE_OR_KW); return TYPE_OR_KW;}
-{AND_KW} {add_node(yytext, TYPE_AND_KW); return TYPE_AND_KW;}
-{NOT_KW} {add_node(yytext, TYPE_NOT_KW); return TYPE_NOT_KW;}
-{XOR_KW} {add_node(yytext, TYPE_XOR_KW); return TYPE_XOR_KW;}
-{ANDTHEN_KW} {add_node(yytext, TYPE_ANDTHEN_KW); return TYPE_ANDTHEN_KW;}
+{OR_KW} {add_node(yytext, TYPE_OR_KW); return OR_KW;}
+{AND_KW} {add_node(yytext, TYPE_AND_KW); return AND_KW;}
+{NOT_KW} {add_node(yytext, TYPE_NOT_KW); return NOT_KW;}
+{XOR_KW} {add_node(yytext, TYPE_XOR_KW); return XOR_KW;}
+{ANDTHEN_KW} {add_node(yytext, TYPE_ANDTHEN_KW); return ANDTHEN_KW;}
 
-{SEMICOLON} {add_node(yytext, TYPE_SEMICOLON); return TYPE_SEMICOLON;}
-{COLON} {add_node(yytext, TYPE_COLON); return TYPE_COLON;}
-{COMMA} {add_node(yytext, TYPE_COMMA); return TYPE_COMMA;}
-{OPEN_BRACKET} {add_node(yytext, TYPE_OPEN_BRACKET); return TYPE_OPEN_BRACKET;}
-{CLOSE_BRACKET} {add_node(yytext, TYPE_CLOSE_BRACKET); return TYPE_CLOSE_BRACKET;}
-{OPEN_CURLY_BRACES} {add_node(yytext, TYPE_OPEN_CURLY_BRACES); return TYPE_OPEN_CURLY_BRACES;}
-{CLOSE_CURLY_BRACES} {add_node(yytext, TYPE_CLOSE_CURLY_BRACES); return TYPE_CLOSE_CURLY_BRACES;}
-{OPEN_PARENTHESIS} {add_node(yytext, TYPE_OPEN_PARENTHESIS); return TYPE_OPEN_PARENTHESIS;}
-{CLOSE_PARENTHESIS} {add_node(yytext, TYPE_CLOSE_PARENTHESIS); return TYPE_CLOSE_PARENTHESIS;}
-{DOT} {add_node(yytext, TYPE_DOT); return TYPE_DOT;}
+{SEMICOLON} {add_node(yytext, TYPE_SEMICOLON); return SEMICOLON;}
+{COLON} {add_node(yytext, TYPE_COLON); return COLON;}
+{COMMA} {add_node(yytext, TYPE_COMMA); return COMMA;}
+{OPEN_BRACKET} {add_node(yytext, TYPE_OPEN_BRACKET); return OPEN_BRACKET;}
+{CLOSE_BRACKET} {add_node(yytext, TYPE_CLOSE_BRACKET); return CLOSE_BRACKET;}
+{OPEN_CURLY_BRACES} {add_node(yytext, TYPE_OPEN_CURLY_BRACES); return OPEN_CURLY_BRACES;}
+{CLOSE_CURLY_BRACES} {add_node(yytext, TYPE_CLOSE_CURLY_BRACES); return CLOSE_CURLY_BRACES;}
+{OPEN_PARENTHESIS} {add_node(yytext, TYPE_OPEN_PARENTHESIS); return OPEN_PARENTHESIS;}
+{CLOSE_PARENTHESIS} {add_node(yytext, TYPE_CLOSE_PARENTHESIS); return CLOSE_PARENTHESIS;}
+{DOT} {add_node(yytext, TYPE_DOT); return DOT;}
 
-{LT_OP} {add_node(yytext, TYPE_LT_OP); return TYPE_LT_OP;}
-{GT_OP} {add_node(yytext, TYPE_GT_OP); return TYPE_GT_OP;}
-{EQ_OP} {add_node(yytext, TYPE_EQ_OP); return TYPE_EQ_OP;}
-{PLUS_OP} {add_node(yytext, TYPE_PLUS_OP); return TYPE_PLUS_OP;}
-{MINUS_OP}  {add_node(yytext, TYPE_MINUS_OP); return TYPE_MINUS_OP;}
-{MULTIPLY_OP} {add_node(yytext, TYPE_MULTIPLY_OP); return TYPE_MULTIPLY_OP;}
-{DIVIDE_OP} {add_node(yytext, TYPE_DIVIDE_OP); return TYPE_DIVIDE_OP;}
-{QUESTIONMARK_OP} {add_node(yytext, TYPE_QUESTIONMARK_OP); return TYPE_QUESTIONMARK_OP;}
+{LT_OP} {add_node(yytext, TYPE_LT_OP); return LT_OP;}
+{GT_OP} {add_node(yytext, TYPE_GT_OP); return GT_OP;}
+{EQ_OP} {add_node(yytext, TYPE_EQ_OP); return EQ_OP;}
+{PLUS_OP} {add_node(yytext, TYPE_PLUS_OP); return PLUS_OP;}
+{MINUS_OP}  {add_node(yytext, TYPE_MINUS_OP); return MINUS_OP;}
+{MULTIPLY_OP} {add_node(yytext, TYPE_MULTIPLY_OP); return MULTIPLY_OP;}
+{DIVIDE_OP} {add_node(yytext, TYPE_DIVIDE_OP); return DIVIDE_OP;}
+{QUESTIONMARK_OP} {add_node(yytext, TYPE_QUESTIONMARK_OP); return QUESTIONMARK_OP;}
 
-{BOOLEAN_FALSE} {add_node(yytext, TYPE_BOOLEAN_FALSE); return TYPE_BOOLEAN_FALSE;}
-{BOOLEAN_TRUE} {add_node(yytext, TYPE_BOOLEAN_TRUE); return TYPE_BOOLEAN_TRUE;}
+{BOOLEAN_FALSE} {add_node(yytext, TYPE_BOOLEAN_FALSE); return BOOLEAN_FALSE;}
+{BOOLEAN_TRUE} {add_node(yytext, TYPE_BOOLEAN_TRUE); return BOOLEAN_TRUE;}
 
-{PROGRAM_KW} {add_node(yytext, TYPE_PROGRAM_KW); return TYPE_PROGRAM_KW;}
-{STRUCT_KW} {add_node(yytext, TYPE_STRUCT_KW); return TYPE_STRUCT_KW;}
-{CONST_KW} {add_node(yytext, TYPE_CONST_KW); return TYPE_CONST_KW;}
-{INTEGER_KW} {add_node(yytext, TYPE_INTEGER_KW); return TYPE_INTEGER_KW;}
-{REAL_KW} {add_node(yytext, TYPE_REAL_KW); return TYPE_REAL_KW;}
-{BOOLEAN_KW} {add_node(yytext, TYPE_BOOLEAN_KW); return TYPE_BOOLEAN_KW;}
-{CHARACTER_KW} {add_node(yytext, TYPE_CHARACTER_KW); return TYPE_CHARACTER_KW;}
-{IF_KW} {add_node(yytext, TYPE_IF_KW); return TYPE_IF_KW;}
-{THEN_KW} {add_node(yytext, TYPE_THEN_KW); return TYPE_THEN_KW;}
-{ELSE_KW} {add_node(yytext, TYPE_ELSE_KW); return TYPE_ELSE_KW;}
-{SWITCH_KW} {add_node(yytext, TYPE_SWITCH_KW); return TYPE_SWITCH_KW;}
-{END_KW} {add_node(yytext, TYPE_END_KW); return TYPE_END_KW;}
-{STATE_KW} {add_node(yytext, TYPE_STATE_KW); return TYPE_STATE_KW;}
-{DEFAULT_KW} {add_node(yytext, TYPE_DEFAULT_KW); return TYPE_DEFAULT_KW;}
-{WHEN_KW} {add_node(yytext, TYPE_WHEN_KW); return TYPE_WHEN_KW;}
-{RETURN_KW} {add_node(yytext, TYPE_RETURN_KW); return TYPE_RETURN_KW;}
-{BREAK_KW} {add_node(yytext, TYPE_BREAK_KW); return TYPE_BREAK_KW;}
+{PROGRAM_KW} {add_node(yytext, TYPE_PROGRAM_KW); return PROGRAM_KW;}
+{STRUCT_KW} {add_node(yytext, TYPE_STRUCT_KW); return STRUCT_KW;}
+{CONST_KW} {add_node(yytext, TYPE_CONST_KW); return CONST_KW;}
+{INTEGER_KW} {add_node(yytext, TYPE_INTEGER_KW); return INTEGER_KW;}
+{REAL_KW} {add_node(yytext, TYPE_REAL_KW); return REAL_KW;}
+{BOOLEAN_KW} {add_node(yytext, TYPE_BOOLEAN_KW); return BOOLEAN_KW;}
+{CHARACTER_KW} {add_node(yytext, TYPE_CHARACTER_KW); return CHARACTER_KW;}
+{IF_KW} {add_node(yytext, TYPE_IF_KW); return IF_KW;}
+{THEN_KW} {add_node(yytext, TYPE_THEN_KW); return THEN_KW;}
+{ELSE_KW} {add_node(yytext, TYPE_ELSE_KW); return ELSE_KW;}
+{SWITCH_KW} {add_node(yytext, TYPE_SWITCH_KW); return SWITCH_KW;}
+{END_KW} {add_node(yytext, TYPE_END_KW); return END_KW;}
+{STATE_KW} {add_node(yytext, TYPE_STATE_KW); return STATE_KW;}
+{DEFAULT_KW} {add_node(yytext, TYPE_DEFAULT_KW); return DEFAULT_KW;}
+{WHEN_KW} {add_node(yytext, TYPE_WHEN_KW); return WHEN_KW;}
+{RETURN_KW} {add_node(yytext, TYPE_RETURN_KW); return RETURN_KW;}
+{BREAK_KW} {add_node(yytext, TYPE_BREAK_KW); return BREAK_KW;}
 
 
 {WHITESPACE} { column += yyleng; }
-{IDENTIFIER} {add_node(yytext, TYPE_IDENTIFIER); return TYPE_IDENTIFIER;}
-{NUMBER} {add_node(yytext, TYPE_NUMBER); return TYPE_NUMBER;}
-{REAL_NUMBER} {add_node(yytext, TYPE_REAL_NUMBER); return TYPE_REAL_NUMBER;}
-{CONST_CHAR} {add_node(yytext, TYPE_CONST_CHAR); return TYPE_CONST_CHAR; }
+{IDENTIFIER} {add_node(yytext, TYPE_IDENTIFIER); return IDENTIFIER;}
+{NUMBER} {add_node(yytext, TYPE_NUMBER); return NUMBER;}
+{REAL_NUMBER} {add_node(yytext, TYPE_REAL_NUMBER); return REAL_NUMBER;}
+{CONST_CHAR} {add_node(yytext, TYPE_CONST_CHAR); return CONST_CHAR; }
 %%
 
 int start_lex()
