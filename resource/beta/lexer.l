@@ -60,7 +60,7 @@
 
     void add_node(char *value, unsigned char type)
     {
-        wprintf(L"%s\t%d\n", value, type);
+        // wprintf(L"%s\t%d\n", value, type);
     }
 %}
 
@@ -93,12 +93,12 @@ ANDTHEN_KW (efcHdgd)
 SEMICOLON [;]
 COLON [:]
 COMMA [,]
-OPEN_BRACKET (\])
-CLOSE_BRACKET (\[)
+OPEN_BRACKET (\[)
+CLOSE_BRACKET (\])
 OPEN_CURLY_BRACES (\{)
 CLOSE_CURLY_BRACES (\})
-OPEN_PARENTHESIS (\))
-CLOSE_PARENTHESIS (\()
+OPEN_PARENTHESIS (\()
+CLOSE_PARENTHESIS (\))
 DOT (\.)
 
 LT_OP (\<)
@@ -183,7 +183,7 @@ CONST_CHAR [\'][\\]?{CHARACTER}[\']
 
 int start_lex()
 {
-    printf("hey");
+    // printf("hey");
     yylex();
 
     return 0;
