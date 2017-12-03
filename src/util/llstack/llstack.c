@@ -4,7 +4,7 @@
 
 void llstack_init(LLStack *llstack)
 {
-    (*llstack) = malloc(sizeof(LLStack));
+    (*llstack) = malloc(sizeof(LLStackType));
     (*llstack)->__start_node = (*llstack)->__last_node = NULL;
     (*llstack)->size = 0;
 }

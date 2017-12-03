@@ -17,8 +17,8 @@ typedef struct LLStackNode{
 typedef struct {
     LLStackNode __start_node;
     LLStackNode __last_node;
-    long long size;
-} *LLStack;
+    size_t size;
+} *LLStack, LLStackType;
 
 /**
  * Initial the data structure of stack container
