@@ -5,6 +5,7 @@
 #ifndef RAZPILER_LLSTACK_H
 #define RAZPILER_LLSTACK_H
 
+#include <stdlib.h>
 #include <stdbool.h>
 
 typedef void *LLStackData;
