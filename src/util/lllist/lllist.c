@@ -21,10 +21,8 @@ void lllist_push_back(LLList lllist, LLListData lllist_data)
     node->__data = lllist_data;
     node->__ll_last = NULL;
 
-    printf("tr:%d\n", (*(int *)node->__data));
     if (lllist->__first_node == NULL)        // List is empty
     {
-        printf("First is added\n");
         node->__ll_next = NULL;
         lllist->__last_node = node;
         lllist->__first_node = node;
@@ -32,7 +30,6 @@ void lllist_push_back(LLList lllist, LLListData lllist_data)
     }
     else
     {
-        printf("Next is added\n");
         node->__ll_next = lllist->__first_node;
         lllist->__first_node->__ll_last = node;
         lllist->__first_node = node;
@@ -47,10 +44,8 @@ void lllist_push_front(LLList lllist, LLListData lllist_data)
     node->__data = lllist_data;
     node->__ll_next = NULL;
 
-    printf("tr:%d\n", (*(int *)node->__data));
     if (lllist->__last_node == NULL)        // List is empty
     {
-        printf("First is added\n");
         node->__ll_last = NULL;
         lllist->__last_node = node;
         lllist->__first_node = node;
@@ -58,7 +53,6 @@ void lllist_push_front(LLList lllist, LLListData lllist_data)
     }
     else
     {
-        printf("Next is added\n");
         node->__ll_last = lllist->__last_node;
         lllist->__last_node->__ll_next = node;
         lllist->__last_node = node;
@@ -72,14 +66,28 @@ LLListData lllist_get_current(LLList lllist)
     return lllist->__current_node->__data;
 }
 
-void lllist_step_forward(LLList lllist)
+LLListNode lllist_get_current_p(LLList lllist)
 {
-    lllist->__current_node = lllist->__current_node->__ll_next;
+    return lllist->__current_node;
 }
 
-void lllist_step_backward(LLList lllist)
+void lllist_set_current_p(LLList lllist, LLListNode lllist_node)
 {
+    lllist->__current_node = lllist_node;
+}
+
+bool lllist_step_forward(LLList lllist)
+{
+    if (lllist->__current_node == lllist->__last_node) return false;
+    lllist->__current_node = lllist->__current_node->__ll_next;
+    return true;
+}
+
+bool lllist_step_backward(LLList lllist)
+{
+    if (lllist->__current_node == lllist->__first_node) return false;
     lllist->__current_node = lllist->__current_node->__ll_last;
+    return true;
 }
 
 bool lllist_is_at_last(LLList lllist)

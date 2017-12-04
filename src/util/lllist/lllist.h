@@ -61,30 +61,49 @@ bool lllist_is_at_first(LLList);
 void lllist_push_back(LLList, LLListData);
 
 /**
- *
- * @param lllist
- * @param llList_data
+ * Push to the front of the list
+ * @param lllist The list
+ * @param llList_data The data to be pushed
  */
 void lllist_push_front(LLList, LLListData);
 
 /**
- * Get
- * @param lllist
- * @return
+ * Get the data from the current node
+ * @param lllist The list
+ * @return The data of the current node
  */
 LLListData lllist_get_current(LLList);
 
 /**
- *
- * @param lllist
+ * Returns the pointer to the current node
+ * @param lllist The list
+ * @return The pointer of current
  */
-void lllist_step_forward(LLList);
+LLListNode lllist_get_current_p(LLList);
 
 /**
- *
- * @param lllist
+ * Set the current pointer
+ * @param lllist The list
+ * @param lllist_node The node to be assigned to current
+ * @return
  */
-void lllist_step_backward(LLList);
+void lllist_set_current_p(LLList, LLListNode);
+
+/**
+ * Move the current to the forward and returns false
+ * if current is in the last of list
+ * @param lllist
+ * @return If it can step returns true
+ */
+bool lllist_step_forward(LLList);
+
+/**
+ * Move the current to the backward and returns false
+ * if current is in the first of list
+ * @param lllist
+ * @return If it can step returns true
+ */
+bool lllist_step_backward(LLList);
 
 /**
  * Release the resources allocated to the lllist
