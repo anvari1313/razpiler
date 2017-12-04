@@ -32,7 +32,7 @@ FileLine *scan_file(char *file_path)
     {
 
         char *str = preprocess_line(current);
-//        wprintf(L"00%s00\n", str);
+        wprintf(L"00%s00\n", str);
         start_lex(str, current);
 //        func(str, current);
 //        wprintf(L"--%ls--|--%s--\n", current->line_content, str);
