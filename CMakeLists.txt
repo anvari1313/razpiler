@@ -39,6 +39,6 @@ set(CMAKE_C_STANDARD 99)
 
 find_package(FLEX REQUIRED)
 FLEX_TARGET(razpiler resource/lexer.l src/scanner/lex2.yy.c)
-set(SOURCE_FILES src/main.c src/scanner/lexer.h src/scanner/pp.c src/scanner/pp.h src/scanner/scanner.c src/scanner/scanner.h src/scanner/lex.yy.c src/scanner/type.h src/symtable/symtable.h src/symtable/symtable.c src/symtable/kwtable.h src/symtable/kwtable.c src/util/llstack/llstack.h src/util/llstack/llstack.c)
+set(SOURCE_FILES src/main.c src/scanner/lexer.h src/scanner/pp.c src/scanner/pp.h src/scanner/scanner.c src/scanner/scanner.h src/scanner/lex.yy.c src/scanner/type.h src/symtable/symtable.h src/symtable/symtable.c src/symtable/kwtable.h src/symtable/kwtable.c src/util/llstack/llstack.h src/util/llstack/llstack.c src/util/lllist/lllist.h src/util/lllist/lllist.c)
 
 add_executable(razpiler ${SOURCE_FILES})
