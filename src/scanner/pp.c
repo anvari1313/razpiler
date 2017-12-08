@@ -162,7 +162,7 @@ wchar_t map_to_farsi(char c)
         case 'A':
             result = L'آ';
             break;
-        case 'B‌':
+        case 'B':
             result = L'B';
             break;
         case 'C':
