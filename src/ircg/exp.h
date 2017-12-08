@@ -13,5 +13,6 @@ typedef struct {
 } *Expression, ExpressionType;
 
 void exp_init(Expression *);
+void exp_set_place(Expression);
 
 #endif //RAZPILER_EXP_H

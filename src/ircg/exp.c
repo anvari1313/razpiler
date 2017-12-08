@@ -14,3 +14,8 @@ void exp_init(Expression *expression)
     lllist_init(&((*expression)->false_list));
     lllist_init(&((*expression)->true_list));
 }
+
+void exp_set_place(Expression exp)
+{
+
+}
