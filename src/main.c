@@ -30,7 +30,7 @@ int main() {
 
     char *locale = setlocale(LC_ALL, "");       // Set the locale for reading the persian characters
     wprintf(L"-------------------------------------------\n");
-    FileLine *start = scan_file("/home/ahmad/Desktop/input2.txt");
+    FileLine *start = scan_file("/Users/invisible/Desktop/input2 (1).txt");
     FileLine *current = start->next_line;
 
     while (lllist_step_forward(lexeme_list))

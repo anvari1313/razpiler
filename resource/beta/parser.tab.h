@@ -85,12 +85,13 @@ extern int yydebug;
     MULTIPLY_OP = 295,
     DIVIDE_OP = 296,
     QUESTIONMARK_OP = 297,
-    IDENTIFIER = 298,
-    NUMBER = 299,
-    CONST_CHAR = 300,
-    REAL_NUMBER = 301,
-    BOOLEAN_FALSE = 302,
-    BOOLEAN_TRUE = 303
+    PERCENT_OP = 298,
+    IDENTIFIER = 299,
+    NUMBER = 300,
+    CONST_CHAR = 301,
+    REAL_NUMBER = 302,
+    BOOLEAN_FALSE = 303,
+    BOOLEAN_TRUE = 304
   };
 #endif
 

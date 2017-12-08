@@ -1,5 +1,5 @@
+#include <stdlib.h>
 #include "lllist.h"
-#include <malloc.h>
 
 void lllist_init(LLList *lllist)
 {
