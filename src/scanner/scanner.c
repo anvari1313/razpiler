@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <memory.h>
 #include <stdlib.h>
+#include "../stdout/stdout.h"
 
 #define IS_NEWLINE(c) ((c) == L'\n')? true:false                        // Macro for checking if the char is newLine char
 #define BUFFER_ALLOC(size) (wchar_t *)malloc(size * sizeof(wchar_t))    // Macro for allocation of memory of buffer
@@ -16,21 +17,27 @@ void enlarge_buffer(wchar_t **, size_t *);                               //  Mak
 void new_line(FileLine **, wchar_t *, size_t, long long, FILE *);        //  Add new node to lines linked list
 FileLine *separate_lines(FILE *);                                        //  Read the file and separate it to lines
 
+extern LLList lexeme_list;
 
 FileLine *scan_file(char *file_path)
 {
     FILE *file;
     file = fopen(file_path, "r");
 
+    lllist_init(&lexeme_list);
+
     if (file == NULL)   // If any error occurred in opening the file
+    {
+        std_out(ERROR_TYPE_CRITICAL, ERROR_FILE_NOT_FOUND);
         return NULL;
+    }
 
     FileLine *start = separate_lines(file);
     FileLine *current = start->next_line;
 
     while(current != NULL)
     {
-
+//        wprintf(L"%ls       ", current->line_content);
         char *str = preprocess_line(current);
         wprintf(L"00%s00\n", str);
         start_lex(str, current);
@@ -39,7 +46,7 @@ FileLine *scan_file(char *file_path)
 //        func(str, NULL);
         current = current->next_line;
     }
-    return NULL;
+    return start;
 }
 
 
