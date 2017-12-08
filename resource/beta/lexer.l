@@ -55,12 +55,165 @@
 #define TYPE_BOOLEAN_FALSE 80
 #define TYPE_BOOLEAN_TRUE 81
 
+    char *type_to_string(int type)
+    {
+        char *result = malloc(sizeof(char) * 20);
+        switch(type)
+        {
+            case 1:
+                result = "PROGRAM_KW";
+                break;
+            case 2:
+                result = "STRUCT_KW";
+                break;
+            case 3:
+                result = "CONST_KW";
+                break;
+            case 4:
+                result = "INTEGER_KW";
+                break;
+            case 5:
+                result = "REAL_KW";
+                break;
+            case 6:
+                result = "BOOLEAN_KW";
+                break;
+            case 7:
+                result = "CHARACTER_KW";
+                break;
+            case 8:
+                result = "IF_KW";
+                break;
+            case 9:
+                result = "THEN_KW";
+                break;
+            case 10:
+                result = "ELSE_KW";
+                break;
+            case 11:
+                result = "SWITCH_KW";
+                break;
+            case 12:
+                result = "END_KW";
+                break;
+            case 13:
+                result = "STATE_KW";
+                break;
+            case 14:
+                result = "DEFAULT_KW";
+                break;
+            case 15:
+                result = "WHEN_KW";
+                break;
+            case 16:
+                result = "RETURN_KW";
+                break;
+            case 17:
+                result = "BREAK_KW";
+                break;
+            case 30:
+                result = "OR_KW";
+                break;
+            case 31:
+                result = "AND_KW";
+                break;
+            case 32:
+                result = "NOT_KW";
+                break;
+            case 33:
+                result = "XOR_KW";
+                break;
+            case 34:
+                result = "ANDTHEN_KW";
+                break;
+            case 40:
+                result = "SEMICOLON";
+                break;
+            case 41:
+                result = "COLON";
+                break;
+            case 42:
+                result = "COMMA";
+                break;
+            case 43:
+                result = "OPEN_BRACKET";
+                break;
+            case 44:
+                result = "CLOSE_BRACKET";
+                break;
+            case 45:
+                result = "OPEN_CURLY_BRACES";
+                break;
+            case 46:
+                result = "CLOSE_CURLY_BRACES";
+                break;
+            case 47:
+                result = "OPEN_PARENTHESIS";
+                break;
+            case 48:
+                result = "CLOSE_PARENTHESIS";
+                break;
+            case 49:
+                result = "DOT";
+                break;
+            case 50:
+                result = "LT_OP";
+                break;
+            case 51:
+                result = "GT_OP";
+                break;
+            case 52:
+                result = "EQ_OP";
+                break;
+            case 53:
+                result = "PLUS_OP";
+                break;
+            case 54:
+                result = "MINUS_OP";
+                break;
+            case 55:
+                result = "MULTIPLY_OP";
+                break;
+            case 56:
+                result = "DIVIDE_OP";
+                break;
+            case 57:
+                result = "QUESTIONMARK_OP";
+                break;
+            case 58:
+                result = "PERCENT_OP";
+                break;
+            case 70:
+                result = "IDENTIFIER";
+                break;
+            case 71:
+                result = "NUMBER";
+                break;
+            case 72:
+                result = "CONST_CHAR";
+                break;
+            case 73:
+                result = "REAL_NUMBER";
+                break;
+            case 80:
+                result = "BOOLEAN_FALSE";
+                break;
+            case 81:
+                result = "BOOLEAN_TRUE";
+                break;
+            default:
+                result = "**UNKNOWN**";
+            
+        }
+
+        return result;
+    }
 
     long long column = 0;
 
     void add_node(char *value, unsigned char type)
     {
-        // wprintf(L"%s\t%d\n", value, type);
+        wprintf(L"%s\t%s\n", value, type_to_string(type));
     }
 %}
 
