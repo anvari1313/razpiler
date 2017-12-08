@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <wchar.h>
+#include "../util/lllist/lllist.h"
 
 /**
  * Structure of the linked list of the lines to load from the file

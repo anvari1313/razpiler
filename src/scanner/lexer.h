@@ -59,6 +59,9 @@
 #define TYPE_BOOLEAN_FALSE 80
 #define TYPE_BOOLEAN_TRUE 81
 
+#include "../util/lllist/lllist.h"
+
+LLList lexeme_list;
 
 #include "type.h"
 

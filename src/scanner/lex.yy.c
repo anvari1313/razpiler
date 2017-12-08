@@ -2106,12 +2106,18 @@ void yyfree (void * ptr )
 #line 143 "resource/lexer.l"
 
 
+extern LLList lexeme_list;
 
 int start_lex(char *string, FileLine *fileLine)
 {
+    printf("This is called\n");
     current_line_pointer = fileLine;
 
     yy_scan_string(string);
+    char *strig = malloc(20 * sizeof(char));
+    strcpy(strig, "this");
+    wprintf(L"%s\n", strig);
+    lllist_push_front(lexeme_list, strig);
     yylex();
 
     return 0;
