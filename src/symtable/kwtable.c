@@ -11,7 +11,7 @@
 KWTableNode first = NULL;
 KWTableNode last = NULL;
 
-void add_kw(char *token)
+void kw_add(char *token)
 {
     if (first == NULL)
     {
@@ -28,7 +28,7 @@ void add_kw(char *token)
         last->next = NULL;
     }
 }
-bool search(char *token)
+bool kw_search(char *token)
 {
     KWTableNode current = first;
     while (current)

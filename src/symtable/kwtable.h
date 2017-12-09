@@ -14,7 +14,7 @@ struct KWTableStruct{
 
 typedef struct KWTableStruct *KWTableNode;
 
-void add_kw(char *);
-bool search(char *);
+void kw_add(char *);
+bool kw_search(char *);
 
 #endif //RAZPILER_KWTABLE_H
