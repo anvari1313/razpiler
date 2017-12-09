@@ -46,6 +46,8 @@
 #define TYPE_DIVIDE_OP 56
 #define TYPE_QUESTIONMARK_OP 57
 #define TYPE_PERCENT_OP 58
+#define TYPE_PLUS_PLUS_OP 59
+#define TYPE_MINUS_MINUS_OP 60
 
 #define TYPE_IDENTIFIER 70
 #define TYPE_NUMBER 71
@@ -183,6 +185,13 @@
             case 58:
                 result = "PERCENT_OP";
                 break;
+            case 59:
+                result = "PLUS_PLUS_OP";
+                break;
+            case 60:
+                result = "MINUS_MINUS_OP";
+                break;
+            
             case 70:
                 result = "IDENTIFIER";
                 break;
@@ -263,6 +272,8 @@ DIVIDE_OP (\/)
 MINUS_OP (\-)
 QUESTIONMARK_OP (\?)
 PERCENT_OP (\%)
+PLUS_PLUS_OP "++"
+MINUS_MINUS_OP "--"
 
 BOOLEAN_FALSE (WbT)
 BOOLEAN_TRUE (KMPE)
@@ -298,6 +309,8 @@ CONST_CHAR [\'][\\]?{CHARACTER}[\']
 {LT_OP} {add_node(yytext, TYPE_LT_OP); return LT_OP;}
 {GT_OP} {add_node(yytext, TYPE_GT_OP); return GT_OP;}
 {EQ_OP} {add_node(yytext, TYPE_EQ_OP); return EQ_OP;}
+{PLUS_PLUS_OP} {add_node(yytext, TYPE_PLUS_PLUS_OP); return PLUS_PLUS_OP;}
+{MINUS_MINUS_OP} {add_node(yytext, TYPE_MINUS_MINUS_OP); return MINUS_MINUS_OP;}
 {PLUS_OP} {add_node(yytext, TYPE_PLUS_OP); return PLUS_OP;}
 {MINUS_OP}  {add_node(yytext, TYPE_MINUS_OP); return MINUS_OP;}
 {MULTIPLY_OP} {add_node(yytext, TYPE_MULTIPLY_OP); return MULTIPLY_OP;}
