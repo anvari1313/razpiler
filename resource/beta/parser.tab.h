@@ -80,18 +80,20 @@ extern int yydebug;
     LT_OP = 290,
     GT_OP = 291,
     EQ_OP = 292,
-    PLUS_OP = 293,
-    MINUS_OP = 294,
-    MULTIPLY_OP = 295,
-    DIVIDE_OP = 296,
-    QUESTIONMARK_OP = 297,
-    PERCENT_OP = 298,
-    IDENTIFIER = 299,
-    NUMBER = 300,
-    CONST_CHAR = 301,
-    REAL_NUMBER = 302,
-    BOOLEAN_FALSE = 303,
-    BOOLEAN_TRUE = 304
+    PLUS_PLUS_OP = 293,
+    MINUS_MINUS_OP = 294,
+    PLUS_OP = 295,
+    MINUS_OP = 296,
+    MULTIPLY_OP = 297,
+    DIVIDE_OP = 298,
+    QUESTIONMARK_OP = 299,
+    PERCENT_OP = 300,
+    IDENTIFIER = 301,
+    NUMBER = 302,
+    CONST_CHAR = 303,
+    REAL_NUMBER = 304,
+    BOOLEAN_FALSE = 305,
+    BOOLEAN_TRUE = 306
   };
 #endif
 

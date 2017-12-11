@@ -1,9 +1,41 @@
 %{
     extern char* yytext;
     void yyerror(const char *s);
+
+    int label_counter = 0;
+    int temp_counter = 0;
+
+    char* new_label()
+    {
+        char *temp = malloc(sizeof(char) * 10);
+        sprintf(temp, "L%d", label_counter);
+        label_counter++;
+
+        return temp;
+    }
+
+    char* new_temp()
+    {
+        char *temp = malloc(sizeof(char) * 10);
+        sprintf(temp, "t%d", temp_counter);
+        temp_counter++;
+
+        return temp;
+    }
 %}
 
+%union {
+    struct {
+        char *place;
+        char *code;
+        char *true_list;
+        char *false_list;
+    } eval;
+}
+
 %token PROGRAM_KW STRUCT_KW CONST_KW INTEGER_KW REAL_KW BOOLEAN_KW CHARACTER_KW IF_KW THEN_KW ELSE_KW SWITCH_KW END_KW STATE_KW DEFAULT_KW WHEN_KW RETURN_KW BREAK_KW OR_KW AND_KW NOT_KW XOR_KW ANDTHEN_KW SEMICOLON COLON COMMA OPEN_BRACKET CLOSE_BRACKET OPEN_CURLY_BRACES CLOSE_CURLY_BRACES OPEN_PARENTHESIS CLOSE_PARENTHESIS DOT LT_OP GT_OP EQ_OP PLUS_PLUS_OP MINUS_MINUS_OP PLUS_OP MINUS_OP MULTIPLY_OP DIVIDE_OP QUESTIONMARK_OP PERCENT_OP IDENTIFIER NUMBER CONST_CHAR REAL_NUMBER BOOLEAN_FALSE BOOLEAN_TRUE 
+
+%type <eval> ebarateSade ebarateRabetei ebarateRiaziManteghi amalgareRabetei taghirpazir amel ebarateYegani
 
 %left AND_KW
 %left OR_KW
@@ -335,10 +367,29 @@ ebarateSade:
     ebarateSade OR_KW ebarateSade
     {
         printf("Rule 65 \t\t ebarateSade -> ebarateSade OR_KW ebarateSade \n");
+
+        $1.true_list = $$.true_list;
+        $1.false_list = new_label();
+        $3.true_list = $$.true_list;
+        $3.false_list = $$.false_list;
+        $$.code = malloc(sizeof(char) * 100);
+        sprintf($$.code, "%s %s:%s", $1.code, $1.false_list, $3.code);
+
+        printf("\n\n%s\n\n", $$.code);
     }
     | ebarateSade AND_KW ebarateSade
     {
         printf("Rule 66 \t\t ebarateSade -> ebarateSade AND_KW ebarateSade \n");
+
+        $1.true_list = new_label();
+        $1.false_list = $$.false_list;
+        $3.true_list = $$.true_list;
+        $3.false_list = $$.false_list;
+        $$.code = malloc(sizeof(char) * 100);
+        sprintf($$.code, "%s %s: %s", $1.code, $1.true_list, $3.code);
+
+        printf("\n\n%s\n\n", $$.code);
+
     }
     | ebarateSade XOR_KW ebarateSade
     {
@@ -351,10 +402,17 @@ ebarateSade:
     | NOT_KW ebarateSade
     {
         printf("Rule 69 \t\t ebarateSade -> ebarateSade NOT_KW ebarateSade \n");
+
+        $2.true_list = $$.false_list;
+        $2.false_list = $$.true_list;
+        $$.code = $2.code;
+
+        printf("\n\n%s\n\n", $$.code);
     }
     | ebarateRabetei
     {
         printf("Rule 70 \t\t ebarateSade -> ebarateRabetei \n");
+        $$ = $1;
     }
     ;
 ebarateRabetei:
@@ -365,34 +423,54 @@ ebarateRabetei:
     | ebarateRiaziManteghi amalgareRabetei ebarateRiaziManteghi
     {
         printf("Rule 72 \t\t ebarateRabetei -> ebarateRiaziManteghi amalgareRabetei ebarateRiaziManteghi \n");
+
+        $$.code = malloc(sizeof(char) * 100);
+        sprintf($$.code, "if %s %s %s goto %s \ngoto %s", $1.place, $2.place, $3.place, $$.true_list, $$.false_list);
     }
     ;
 amalgareRabetei:
     LT_OP
     {
         printf("Rule 73 \t\t amalgareRabetei -> LT_OP \n");
+
+        $$.place = malloc(sizeof(char) * 5);
+        $$.place = "<";
     }
     | LT_OP EQ_OP
     {
         printf("Rule 74 \t\t amalgareRabetei -> LT_OP EQ_OP \n");
+
+        $$.place = malloc(sizeof(char) * 5);
+        $$.place = "<=";
     }
     | EQ_OP EQ_OP
     {
         printf("Rule 75 \t\t amalgareRabetei -> EQ_OP EQ_OP \n");
+
+        $$.place = malloc(sizeof(char) * 5);
+        $$.place = "==";
     }
     | GT_OP EQ_OP
     {
         printf("Rule 76 \t\t amalgareRabetei -> GT_OP EQ_OP \n");
+
+        $$.place = malloc(sizeof(char) * 5);
+        $$.place = ">=";
     }
     | GT_OP
     {
         printf("Rule 77 \t\t amalgareRabetei -> GT_OP \n");
+
+        $$.place = malloc(sizeof(char) * 5);
+        $$.place = ">";
     }
     ;
 ebarateRiaziManteghi:
     ebarateYegani
     {
         printf("Rule 78 \t\t ebarateRiaziManteghi -> ebarateYegani \n");
+
+        $$ = $1;
     }
     | ebarateRiaziManteghi amalgareRiazi ebarateRiaziManteghi
     {
@@ -429,6 +507,8 @@ ebarateYegani:
     | amel
     {
         printf("Rule 86 \t\t ebarateYegani -> amel \n");
+
+        $$ = $1;
     }
     ;
 amalgareYegani:
@@ -449,6 +529,8 @@ amel:
     taghirpazir
     {
         printf("Rule 90 \t\t amel -> taghirpazir \n");
+
+        $$ = $1;
     }
     | taghirNApazir
     {
@@ -459,6 +541,8 @@ taghirpazir:
     IDENTIFIER
     {
         printf("Rule 92 \t\t taghirpazir -> IDENTIFIER \n");
+
+        $$.place = yytext;
     }
     | taghirpazir OPEN_BRACKET ebarat CLOSE_BRACKET
     {

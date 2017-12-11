@@ -222,7 +222,7 @@
 
     void add_node(char *value, unsigned char type)
     {
-        wprintf(L"%s\t%s\n", value, type_to_string(type));
+        // wprintf(L"%s\t%s\n", value, type_to_string(type));
     }
 %}
 
