@@ -1,4 +1,5 @@
 %{
+    #include <stdio.h>
     #include "parser.tab.h"
 #define TYPE_PROGRAM_KW 1
 #define TYPE_STRUCT_KW 2
