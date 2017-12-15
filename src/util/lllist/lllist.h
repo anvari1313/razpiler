@@ -111,4 +111,8 @@ bool lllist_step_backward(LLList);
  */
 void lllist_release(LLList);
 
+void lllist_go_last(LLList);
+
+void lllist_go_first(LLList);
+
 #endif //RAZPILER_LLLIST_H

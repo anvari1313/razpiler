@@ -99,3 +99,13 @@ bool lllist_is_at_first(LLList lllist)
 {
     return lllist->__current_node == lllist->__first_node;
 }
+
+void lllist_go_last(LLList lllist)
+{
+    lllist->__current_node = lllist->__last_node;
+}
+
+void lllist_go_first(LLList lllist)
+{
+    lllist->__current_node = lllist->__first_node;
+}
