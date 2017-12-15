@@ -28,7 +28,6 @@
     struct {
         char *place;
         char *code;
-        char *value
         char *true_list;
         char *false_list;
     } eval;
@@ -45,13 +44,6 @@
 %left MULTIPLY_OP DIVIDE_OP
 %left THEN_KW
 %left ELSE_KW
-
-%token <eval> NUMCONST
-%token <eval> REAL
-%token <eval> BOOLCONST
-%token <eval> ID
-%token <eval> CHARCONST
-%token IF_WITHOUT_ELSE
 
 %%
 
@@ -83,7 +75,7 @@ tarif:
     }
     | tarifeTabe
     {
-        printf("Rule 6 \t\t tarif -> tarifeTabe \n");
+        printf("Rule 6 \t\t tarif -> tarifeTaber \n");
     }
     ;
 tarifeSakhtar:
@@ -387,12 +379,8 @@ ebarateSade:
     }
     | ebarateSade AND_KW ebarateSade
     {
-        printf("Rule 66 \t\t ebarateSade -> ebarateSade AND_KW ebarateSade\n");
-        printf("This is called here\n");
-        // if ($1 != NULL)
-        //     printf("************First parameter is not null\n");
-        // if ($2 == NULL)
-        //     printf("************Secend parameter is null\n");
+        printf("Rule 66 \t\t ebarateSade -> ebarateSade AND_KW ebarateSade \n");
+
         $1.true_list = new_label();
         $1.false_list = $$.false_list;
         $3.true_list = $$.true_list;
@@ -639,14 +627,10 @@ extern yyin;
 
 int main(int argc, char **argv)
 {
-    if (argc == 1)
-        printf("argument list is empty\n");
-    else if (argc == 2)
-    {
+    if (argc > 1)
         yyin = fopen(argv[1], "r");
-    }      
+        
     yyparse();
-    fclose(yyin);
 }
 
 void yyerror(const char *s) {
