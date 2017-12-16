@@ -46,8 +46,23 @@ SymbolNode search_id(char *id_name)
 SymbolNode new_symbol(unsigned char symbol_type, char *symbol_name) {
     SymbolNode symbol_node = malloc(sizeof(SymbolNodeType));
     symbol_node->symbol_type = symbol_type;
-    symbol_node->symbol_name = malloc(strlen(symbol_name) * sizeof(char));
+    symbol_node->symbol_name = malloc((strlen(symbol_name) + 2) * sizeof(char));
+    symbol_node->symbol_id = malloc((strlen(symbol_name) + 2) * sizeof(char));
     strcpy(symbol_node->symbol_name, symbol_name);
+    strcpy(symbol_node->symbol_id, symbol_name);
 
     return symbol_node;
+}
+
+void symbol_print()
+{
+    lllist_go_last(symbols_list);
+    if (lllist_is_empty(symbols_list))
+        return;
+
+    do
+    {
+        printf("%s - %d\n", ((SymbolNode)lllist_get_current(symbols_list))->symbol_name, ((SymbolNode)lllist_get_current(symbols_list))->symbol_type);
+    }
+    while (lllist_step_backward(symbols_list) != false);
 }
