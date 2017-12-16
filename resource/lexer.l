@@ -347,8 +347,8 @@ CONST_CHAR [\'][\\]?{CHARACTER}[\']
 {IDENTIFIER} {
     yylval.eval.text = (char *)malloc((strlen(yytext) + 2) * sizeof(char));
     strcpy(yylval.eval.text, yytext);
-    // printf("///////////%s//////////\n", yytext); 
-    return IDENTIFIER;}
+    return IDENTIFIER;
+    }
 {NUMBER} {add_node(yytext, TYPE_NUMBER); return NUMBER;}
 {REAL_NUMBER} {add_node(yytext, TYPE_REAL_NUMBER); return REAL_NUMBER;}
 {CONST_CHAR} {add_node(yytext, TYPE_CONST_CHAR); return CONST_CHAR; }
