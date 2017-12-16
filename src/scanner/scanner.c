@@ -1,5 +1,4 @@
 #include "scanner.h"
-#include "lexer.h"
 #include "pp.h"
 #include <locale.h>
 #include <stdbool.h>
@@ -17,7 +16,7 @@ void enlarge_buffer(wchar_t **, size_t *);                               //  Mak
 void new_line(FileLine **, wchar_t *, size_t, long long, FILE *);        //  Add new node to lines linked list
 FileLine *separate_lines(FILE *);                                        //  Read the file and separate it to lines
 
-extern LLList lexeme_list;
+LLList lexeme_list;
 
 FileLine *scan_file(char *file_path)
 {
@@ -40,7 +39,7 @@ FileLine *scan_file(char *file_path)
 //        wprintf(L"%ls       ", current->line_content);
         char *str = preprocess_line(current);
         wprintf(L"00%s00\n", str);
-        start_lex(str, current);
+//        start_lex(str, current);
 //        func(str, current);
 //        wprintf(L"--%ls--|--%s--\n", current->line_content, str);
 //        func(str, NULL);
