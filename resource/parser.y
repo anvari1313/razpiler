@@ -1,28 +1,83 @@
 %{
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include "../util/lllist/lllist.h"
+    #include "../symtable/symtable.h"
+    #include "../ircg/quadruple/quad.h"
+    #include "../ircg/error/error.h"
+
+    #define ALLOC_STR(str_size) (char *)malloc((str_size + 1) * sizeof(char) )
     extern char* yytext;
     void yyerror(const char *s);
+
+    int label_counter = 0;
+    int temp_counter = 0;
+    
+    LLList identifiers_list;
+    
+    char* new_label()
+    {
+        char *temp = malloc(sizeof(char) * 10);
+        sprintf(temp, "L%d", label_counter);
+        label_counter++;
+
+        return temp;
+    }
+
+    char* new_temp()
+    {
+        char *temp = malloc(sizeof(char) * 10);
+        sprintf(temp, "t%d", temp_counter);
+        temp_counter++;
+
+        return temp;
+    }
 %}
 
-%token PROGRAM_KW STRUCT_KW CONST_KW INTEGER_KW REAL_KW BOOLEAN_KW CHARACTER_KW IF_KW THEN_KW ELSE_KW SWITCH_KW END_KW STATE_KW DEFAULT_KW WHEN_KW RETURN_KW BREAK_KW OR_KW AND_KW NOT_KW XOR_KW ANDTHEN_KW SEMICOLON COLON COMMA OPEN_BRACKET CLOSE_BRACKET OPEN_CURLY_BRACES CLOSE_CURLY_BRACES OPEN_PARENTHESIS CLOSE_PARENTHESIS DOT LT_OP GT_OP EQ_OP PLUS_OP MINUS_OP MULTIPLY_OP DIVIDE_OP QUESTIONMARK_OP PERCENT_OP IDENTIFIER NUMBER CONST_CHAR REAL_NUMBER BOOLEAN_FALSE BOOLEAN_TRUE 
+%union {
+    struct {
+        char *text;
+        char *place;
+        char *code;
+        char *true_list;
+        char *false_list;
+    } eval;
+    unsigned char id_type;
+}
 
+%token PROGRAM_KW STRUCT_KW CONST_KW INTEGER_KW REAL_KW BOOLEAN_KW CHARACTER_KW IF_KW THEN_KW ELSE_KW SWITCH_KW END_KW STATE_KW DEFAULT_KW WHEN_KW RETURN_KW BREAK_KW OR_KW AND_KW NOT_KW XOR_KW ANDTHEN_KW SEMICOLON COLON COMMA OPEN_BRACKET CLOSE_BRACKET OPEN_CURLY_BRACES CLOSE_CURLY_BRACES OPEN_PARENTHESIS CLOSE_PARENTHESIS DOT LT_OP GT_OP EQ_OP PLUS_PLUS_OP MINUS_MINUS_OP PLUS_OP MINUS_OP MULTIPLY_OP DIVIDE_OP QUESTIONMARK_OP PERCENT_OP IDENTIFIER NUMBER CONST_CHAR REAL_NUMBER BOOLEAN_FALSE BOOLEAN_TRUE
+
+%type <eval> ebarateSade ebarateRabetei ebarateRiaziManteghi amalgareRabetei taghirpazir amel ebarateYegani IDENTIFIER
+%type <id_type> jens jenseMahdud
+
+%left AND_KW
+%left OR_KW
 %right NOT_KW
-%left AND_KW OR_KW
-%left EQ_OP
-%left LT_OP GT_OP
 %left PLUS_OP MINUS_OP
 %left MULTIPLY_OP DIVIDE_OP
 %left THEN_KW
 %left ELSE_KW
-%left QUESTIONMARK_OP
 
 %%
 
 program:
-    PROGRAM_KW IDENTIFIER tarifha
+    startProgram PROGRAM_KW IDENTIFIER tarifha endProgram
     {
-        printf("Rule 1 \t\t program -> PROGRAM_KW IDENTIFIER tarifha \n"); 
+        printf("Rule 1 \t\t program -> PROGRAM_KW IDENTIFIER tarifha %s \n", yylval);
     }
     ;
+
+startProgram:
+    LAMBDA
+    {
+        quad_add("// This is strt of file\n");
+    };
+endProgram:
+    LAMBDA
+    {
+        quad_add("// This is end of file\n");
+    };
+
 tarifha:
     tarifha tarif
     {
@@ -67,34 +122,50 @@ tarifhayeMahalli:
 tarifeMoteghayyereMahdud:
     jenseMahdud tarifhayeMotheghayyerha SEMICOLON
     {
+        do
+        {
+            install_id(lllist_get_current(identifiers_list), $1);
+        }
+        while (lllist_step_backward(identifiers_list) != false);
+
+        lllist_release(identifiers_list);
+        
         printf("Rule 10 \t\t tarifeMoteghayyereMahdud -> jenseMahdud tarifhayeMotheghayyerha SEMICOLON \n");
     }
     ;
 jenseMahdud:
     CONST_KW jens
     {
+        lllist_init(&identifiers_list);
         printf("Rule 11 \t\t jenseMahdud -> CONST_KW jens \n");
+        $$ = $2;
     }
     | jens
     {
+        lllist_init(&identifiers_list);
         printf("Rule 12 \t\t jenseMahdud -> jens \n");
+        $$ = $1;
     }
     ;
 jens:
     INTEGER_KW
     {
+        $$ = SYMBOL_TYPE_INT;
         printf("Rule 13 \t\t jens -> INTEGER_KW \n");
     }
     | REAL_KW
     {
+        $$ = SYMBOL_TYPE_REAL;
         printf("Rule 14 \t\t jens -> REAL_KW \n");
     }
     | BOOLEAN_KW
     {
+        $$ = SYMBOL_TYPE_BOOL;
         printf("Rule 15 \t\t jens -> BOOLEAN_KW \n");
     }
     | CHARACTER_KW
     {
+        $$ = SYMBOL_TYPE_CHAR;
         printf("Rule 16 \t\t jens -> CHARACTER_KW \n");
     }
     ;
@@ -102,6 +173,7 @@ jens:
 tarifeMoteghayyer:
     jens tarifhayeMotheghayyerha SEMICOLON
     {
+        printf("-->>-->>%d\n", $1);
         printf("Rule 17 \t\t tarifeMoteghayyer -> jens tarifhayeMotheghayyerha SEMICOLON \n");
     }
     ;
@@ -128,6 +200,9 @@ tarifeMeghdareAvvalie:
 tarifeShenaseyeMoteghayyer:
     IDENTIFIER
     {
+        char *id_name = (char *)malloc((strlen($1.text) + 1) * sizeof(char));
+        strcpy(id_name, $1.text);
+        lllist_push_front(identifiers_list, id_name);
         printf("Rule 22 \t\t tarifeShenaseyeMoteghayyer -> IDENTIFIER \n");
     }
     | IDENTIFIER OPEN_BRACKET NUMBER CLOSE_BRACKET
@@ -138,6 +213,7 @@ tarifeShenaseyeMoteghayyer:
 tarifeTabe:
     jens IDENTIFIER OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle
     {
+        printf("-->>-->>%d\n", $1);
         printf("Rule 24 \t\t tarifeTabe -> jens IDENTIFIER OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle \n");
     }
     | IDENTIFIER OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle
@@ -218,11 +294,16 @@ jomle:
     }
     ;
 jomleyeMorakkab:
-    OPEN_CURLY_BRACES tarifhayeMahalli jomleha CLOSE_CURLY_BRACES
+    OPEN_CURLY_BRACES mForScope tarifhayeMahalli jomleha CLOSE_CURLY_BRACES
     {
         printf("Rule 41 \t\t jomleyeMorakkab -> OPEN_CURLY_BRACES tarifhayeMahalli jomleha CLOSE_CURLY_BRACES \n");
     }
     ;
+mForScope:
+    LAMBDA {
+        printf("333333333333333333333333333333333333new SCope is\n");
+    }
+
 jomleha:
     jomleha jomle
     {
@@ -320,11 +401,11 @@ ebarat:
     {
         printf("Rule 61 \t\t ebarat -> taghirpazir DIVIDE_OP EQ_OP ebarat \n");
     }
-    | taghirpazir PLUS_OP PLUS_OP
+    | taghirpazir PLUS_PLUS_OP
     {
         printf("Rule 62 \t\t ebarat -> taghirpazir PLUS_OP PLUS_OP \n");
     }
-    | taghirpazir MINUS_OP MINUS_OP
+    | taghirpazir MINUS_MINUS_OP
     {
         printf("Rule 63 \t\t ebarat -> taghirpazir MINUS_OP MINUS_OP \n");
     }
@@ -337,10 +418,29 @@ ebarateSade:
     ebarateSade OR_KW ebarateSade
     {
         printf("Rule 65 \t\t ebarateSade -> ebarateSade OR_KW ebarateSade \n");
+
+        $1.true_list = $$.true_list;
+        $1.false_list = new_label();
+        $3.true_list = $$.true_list;
+        $3.false_list = $$.false_list;
+        $$.code = malloc(sizeof(char) * 100);
+        sprintf($$.code, "%s %s:%s", $1.code, $1.false_list, $3.code);
+
+        printf("\n\n%s\n\n", $$.code);
     }
     | ebarateSade AND_KW ebarateSade
     {
         printf("Rule 66 \t\t ebarateSade -> ebarateSade AND_KW ebarateSade \n");
+
+        $1.true_list = new_label();
+        $1.false_list = $$.false_list;
+        $3.true_list = $$.true_list;
+        $3.false_list = $$.false_list;
+        $$.code = malloc(sizeof(char) * 100);
+        sprintf($$.code, "%s %s: %s", $1.code, $1.true_list, $3.code);
+
+        printf("\n\n%s\n\n", $$.code);
+
     }
     | ebarateSade XOR_KW ebarateSade
     {
@@ -353,10 +453,18 @@ ebarateSade:
     | NOT_KW ebarateSade
     {
         printf("Rule 69 \t\t ebarateSade -> ebarateSade NOT_KW ebarateSade \n");
+
+        $2.true_list = $$.false_list;
+        $2.false_list = $$.true_list;
+        $$.code = $2.code;
+
+        printf("\n\n%s\n\n", $$.code);
     }
     | ebarateRabetei
     {
         printf("Rule 70 \t\t ebarateSade -> ebarateRabetei \n");
+        $$ = $1;
+        $$.code = "$1.code";
     }
     ;
 ebarateRabetei:
@@ -366,35 +474,56 @@ ebarateRabetei:
     }
     | ebarateRiaziManteghi amalgareRabetei ebarateRiaziManteghi
     {
+        
         printf("Rule 72 \t\t ebarateRabetei -> ebarateRiaziManteghi amalgareRabetei ebarateRiaziManteghi \n");
+
+        $$.code = malloc(sizeof(char) * 100);
+
+        sprintf($$.code, "if %s %s %s goto %s \ngoto %s", $1.place, $2.place, $3.place, $$.true_list, $$.false_list);
     }
     ;
 amalgareRabetei:
     LT_OP
     {
         printf("Rule 73 \t\t amalgareRabetei -> LT_OP \n");
+
+        $$.place = malloc(sizeof(char) * 5);
+        sprintf($$.text, "<");
     }
     | LT_OP EQ_OP
     {
         printf("Rule 74 \t\t amalgareRabetei -> LT_OP EQ_OP \n");
+
+        $$.place = malloc(sizeof(char) * 5);
+        sprintf($$.text, "<=");
     }
     | EQ_OP EQ_OP
     {
         printf("Rule 75 \t\t amalgareRabetei -> EQ_OP EQ_OP \n");
+
+        $$.place = malloc(sizeof(char) * 5);
+        sprintf($$.text, "==");
     }
     | GT_OP EQ_OP
     {
         printf("Rule 76 \t\t amalgareRabetei -> GT_OP EQ_OP \n");
+
+        $$.place = malloc(sizeof(char) * 5);
+        sprintf($$.text, ">=");
     }
     | GT_OP
     {
         printf("Rule 77 \t\t amalgareRabetei -> GT_OP \n");
+
+        $$.place = malloc(sizeof(char) * 5);
+        sprintf($$.text, ">");
     }
     ;
 ebarateRiaziManteghi:
     ebarateYegani
     {
         printf("Rule 78 \t\t ebarateRiaziManteghi -> ebarateYegani \n");
+        $$ = $1;
     }
     | ebarateRiaziManteghi amalgareRiazi ebarateRiaziManteghi
     {
@@ -431,6 +560,8 @@ ebarateYegani:
     | amel
     {
         printf("Rule 86 \t\t ebarateYegani -> amel \n");
+
+        $$ = $1;
     }
     ;
 amalgareYegani:
@@ -451,6 +582,8 @@ amel:
     taghirpazir
     {
         printf("Rule 90 \t\t amel -> taghirpazir \n");
+
+        $$ = $1;
     }
     | taghirNApazir
     {
@@ -461,6 +594,16 @@ taghirpazir:
     IDENTIFIER
     {
         printf("Rule 92 \t\t taghirpazir -> IDENTIFIER \n");
+        // char *t = ;
+        // printf("(((((((((((((((((((((((((((((((%s\n", t);
+        SymbolNode node = search_id($1.text);
+        if (node == NULL)
+        {
+            error_id_not_declared($1.text);
+            $$.place = NULL;
+        }
+        else
+            $$.place = node->symbol_id;
     }
     | taghirpazir OPEN_BRACKET ebarat CLOSE_BRACKET
     {
@@ -541,9 +684,34 @@ LAMBDA:
     ;
 %%
 
-int main()
+extern yyin;
+
+void parse_string(char *content)
 {
+    yy_scan_string(content);
     yyparse();
+}
+
+void parse_file(char *path)
+{
+    FILE *f = fopen(path, "r");
+    char * buffer = 0;
+    long length;
+
+    if (f)
+    {
+        fseek (f, 0, SEEK_END);
+        length = ftell (f);
+        fseek (f, 0, SEEK_SET);
+        buffer = malloc (length);
+        if (buffer)
+        {
+            fread (buffer, 1, length, f);
+            parse_string(buffer);
+        }
+        fclose (f);
+    }
+
 }
 
 void yyerror(const char *s) {
