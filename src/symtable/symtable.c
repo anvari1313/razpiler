@@ -4,9 +4,12 @@
 #include <string.h>
 #include "kwtable.h"
 
+int temp_counter;
+
 void init_symbol_table()
 {
     lllist_init(&symbols_list);
+    temp_counter = 0;
     kw_add("int");
     kw_add("float");
     kw_add("main");
@@ -50,6 +53,7 @@ SymbolNode new_symbol(unsigned char symbol_type, char *symbol_name) {
     symbol_node->symbol_id = malloc((strlen(symbol_name) + 2) * sizeof(char));
     strcpy(symbol_node->symbol_name, symbol_name);
     strcpy(symbol_node->symbol_id, symbol_name);
+//    printf("__symobol is : %s", symbol_node->symbol_id);
 
     return symbol_node;
 }
@@ -65,4 +69,11 @@ void symbol_print()
         printf("%s - %d\n", ((SymbolNode)lllist_get_current(symbols_list))->symbol_name, ((SymbolNode)lllist_get_current(symbols_list))->symbol_type);
     }
     while (lllist_step_backward(symbols_list) != false);
+}
+
+SymbolNode install_temp_id(unsigned char type)
+{
+    char *temp_id = (char *)malloc(20 * sizeof(char));
+    sprintf(temp_id, "t%d", temp_counter++);
+    return install_id(temp_id, type);
 }

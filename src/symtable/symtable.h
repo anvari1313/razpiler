@@ -25,6 +25,7 @@ typedef struct
 void init_symbol_table();
 
 SymbolNode install_id(char *id_name, unsigned char type);
+SymbolNode install_temp_id(unsigned char type);
 SymbolNode search_id(char *id_name);
 SymbolNode new_symbol(unsigned char symbol_type, char *symbol_name);
 void symbol_print();
