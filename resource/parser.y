@@ -36,6 +36,7 @@
 
 %union {
     struct {
+        unsigned char type;
         char *text;
         char *place;
         char *code;
@@ -43,12 +44,14 @@
         char *false_list;
     } eval;
     unsigned char id_type;
+    char *label;
 }
 
 %token PROGRAM_KW STRUCT_KW CONST_KW INTEGER_KW REAL_KW BOOLEAN_KW CHARACTER_KW IF_KW THEN_KW ELSE_KW SWITCH_KW END_KW STATE_KW DEFAULT_KW WHEN_KW RETURN_KW BREAK_KW OR_KW AND_KW NOT_KW XOR_KW ANDTHEN_KW SEMICOLON COLON COMMA OPEN_BRACKET CLOSE_BRACKET OPEN_CURLY_BRACES CLOSE_CURLY_BRACES OPEN_PARENTHESIS CLOSE_PARENTHESIS DOT LT_OP GT_OP EQ_OP PLUS_PLUS_OP MINUS_MINUS_OP PLUS_OP MINUS_OP MULTIPLY_OP DIVIDE_OP QUESTIONMARK_OP PERCENT_OP IDENTIFIER NUMBER CONST_CHAR REAL_NUMBER BOOLEAN_FALSE BOOLEAN_TRUE
 
-%type <eval> ebarateSade ebarateRabetei ebarateRiaziManteghi amalgareRabetei taghirpazir amel ebarateYegani IDENTIFIER
+%type <eval> ebarateSade ebarat ebarateRabetei ebarateRiaziManteghi amalgareRabetei taghirpazir amel ebarateYegani IDENTIFIER taghirNApazir
 %type <id_type> jens jenseMahdud
+%type <label> startOFWhile
 
 %left AND_KW
 %left OR_KW
@@ -63,7 +66,7 @@
 program:
     startProgram PROGRAM_KW IDENTIFIER tarifha endProgram
     {
-        printf("Rule 1 \t\t program -> PROGRAM_KW IDENTIFIER tarifha %s \n", yylval);
+        printf("Rule 1 \t\t program -> PROGRAM_KW IDENTIFIER(%s) tarifha\n", $3.text);
     }
     ;
 
@@ -106,7 +109,7 @@ tarif:
 tarifeSakhtar:
     STRUCT_KW IDENTIFIER OPEN_CURLY_BRACES tarifhayeMahalli CLOSE_CURLY_BRACES
     {
-        printf("Rule 7 \t\t tarifeSakhtar -> STRUCT_KW IDENTIFIER OPEN_CURLY_BRACES tarifhayeMahalli CLOSE_CURLY_BRACES \n");
+        printf("Rule 7 \t\t tarifeSakhtar -> STRUCT_KW IDENTIFIER(%s) OPEN_CURLY_BRACES tarifhayeMahalli CLOSE_CURLY_BRACES \n", $2.text);
     }
     ;
 tarifhayeMahalli:
@@ -173,7 +176,7 @@ jens:
 tarifeMoteghayyer:
     jens tarifhayeMotheghayyerha SEMICOLON
     {
-        printf("-->>-->>%d\n", $1);
+        // printf("-->>-->>%d\n", $1);
         printf("Rule 17 \t\t tarifeMoteghayyer -> jens tarifhayeMotheghayyerha SEMICOLON \n");
     }
     ;
@@ -200,25 +203,25 @@ tarifeMeghdareAvvalie:
 tarifeShenaseyeMoteghayyer:
     IDENTIFIER
     {
-        char *id_name = (char *)malloc((strlen($1.text) + 1) * sizeof(char));
+        char *id_name = (char *)malloc((strlen($1.text) + 2) * sizeof(char));
         strcpy(id_name, $1.text);
         lllist_push_front(identifiers_list, id_name);
-        printf("Rule 22 \t\t tarifeShenaseyeMoteghayyer -> IDENTIFIER \n");
+        printf("Rule 22 \t\t tarifeShenaseyeMoteghayyer -> IDENTIFIER(%s) \n", $1.text);
     }
     | IDENTIFIER OPEN_BRACKET NUMBER CLOSE_BRACKET
     {
-        printf("Rule 23 \t\t tarifeShenaseyeMoteghayyer -> IDENTIFIER OPEN_BRACKET NUMBER CLOSE_BRACKET \n");
+        printf("Rule 23 \t\t tarifeShenaseyeMoteghayyer -> IDENTIFIER(%s) OPEN_BRACKET NUMBER CLOSE_BRACKET \n", $1.text);
     }
     ;
 tarifeTabe:
     jens IDENTIFIER OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle
     {
-        printf("-->>-->>%d\n", $1);
-        printf("Rule 24 \t\t tarifeTabe -> jens IDENTIFIER OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle \n");
+        // printf("-->>-->>%d\n", $1);
+        printf("Rule 24 \t\t tarifeTabe -> jens IDENTIFIER(%s) OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle \n", $2.text);
     }
     | IDENTIFIER OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle
     {
-        printf("Rule 25 \t\t tarifeTabe -> IDENTIFIER OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle \n");
+        printf("Rule 25 \t\t tarifeTabe -> IDENTIFIER(%s) OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle \n", $1.text);
     }
     ;
 vorudi:
@@ -260,11 +263,11 @@ shenaseyeVorudiha:
 shenaseyeVorudi:
     IDENTIFIER
     {
-        printf("Rule 33 \t\t shenaseyeVorudi -> IDENTIFIER \n");
+        printf("Rule 33 \t\t shenaseyeVorudi -> IDENTIFIER(%s) \n", $1.text);
     }
     | IDENTIFIER OPEN_BRACKET CLOSE_BRACKET
     {
-        printf("Rule 34 \t\t shenaseyeVorudi -> IDENTIFIER OPEN_BRACKET CLOSE_BRACKET \n");
+        printf("Rule 34 \t\t shenaseyeVorudi -> IDENTIFIER(%s) OPEN_BRACKET CLOSE_BRACKET \n", $1.text);
     }
     ;
 jomle:
@@ -296,12 +299,13 @@ jomle:
 jomleyeMorakkab:
     OPEN_CURLY_BRACES mForScope tarifhayeMahalli jomleha CLOSE_CURLY_BRACES
     {
+        printf("Scope is Closed.\n");
         printf("Rule 41 \t\t jomleyeMorakkab -> OPEN_CURLY_BRACES tarifhayeMahalli jomleha CLOSE_CURLY_BRACES \n");
     }
     ;
 mForScope:
     LAMBDA {
-        printf("333333333333333333333333333333333333new SCope is\n");
+        printf("Scope is created.\n");
     }
 
 jomleha:
@@ -318,6 +322,7 @@ jomleyeEbarat:
     ebarat SEMICOLON
     {
         printf("Rule 44 \t\t jomleyeEbarat -> ebarat SEMICOLON \n");
+        quad_add($1.code);
     }
     | SEMICOLON
     {
@@ -359,11 +364,23 @@ onsorePishfarz:
     }
     ;
 jomleyeTekrar:
-    WHEN_KW OPEN_PARENTHESIS ebarateSade CLOSE_PARENTHESIS jomle
+    WHEN_KW startOFWhile OPEN_PARENTHESIS ebarateSade CLOSE_PARENTHESIS jomle
     {
+        char *ifcode = ALLOC_STR(100);
+        sprintf(ifcode, "if (%s) goto %s;", $4.place, $2);
         printf("Rule 53 \t\t jomleyeTekrar -> WHEN_KW OPEN_PARENTHESIS ebarateSade CLOSE_PARENTHESIS jomle \n");
     }
     ;
+
+startOFWhile:
+    LAMBDA
+    {
+        $$ = new_label();
+        char *code = ALLOC_STR(100);
+        sprintf(code, "%s:", $$);
+        quad_add(code);
+    };
+
 jomleyeBazgasht:
     RETURN_KW SEMICOLON
     {
@@ -384,6 +401,14 @@ ebarat:
     taghirpazir EQ_OP ebarat
     {
         printf("Rule 57 \t\t ebarat -> taghirpazir EQ_OP ebarat \n");
+        SymbolNode node = install_temp_id($1.type);
+        $$.place = ALLOC_STR(strlen(node->symbol_id) + 2);
+        $$.code = ALLOC_STR(100);
+
+        strcpy($$.place, node->symbol_id);
+        $$.type = node->symbol_type;
+        sprintf($$.code, "$s = $s = $s", $$.place, $1.place, $3.place);
+        quad_add($$.code);
     }
     | taghirpazir PLUS_OP EQ_OP ebarat
     {
@@ -412,6 +437,7 @@ ebarat:
     | ebarateSade
     {
         printf("Rule 64 \t\t ebarat -> ebarateSade \n");
+        $$ = $1;
     }
     ;
 ebarateSade:
@@ -419,28 +445,40 @@ ebarateSade:
     {
         printf("Rule 65 \t\t ebarateSade -> ebarateSade OR_KW ebarateSade \n");
 
-        $1.true_list = $$.true_list;
-        $1.false_list = new_label();
-        $3.true_list = $$.true_list;
-        $3.false_list = $$.false_list;
-        $$.code = malloc(sizeof(char) * 100);
-        sprintf($$.code, "%s %s:%s", $1.code, $1.false_list, $3.code);
+        // $1.true_list = $$.true_list;
+        // $1.false_list = new_label();
+        // $3.true_list = $$.true_list;
+        // $3.false_list = $$.false_list;
+        // $$.code = malloc(sizeof(char) * 100);
+        // sprintf($$.code, "%s %s:%s", $1.code, $1.false_list, $3.code);
 
-        printf("\n\n%s\n\n", $$.code);
+        // printf("\n\n%s\n\n", $$.code);
+        SymbolNode node = install_temp_id($1.type);
+        $$.type = $1.type;
+        $$.place = ALLOC_STR(strlen(node->symbol_id));
+        $$.code = malloc(sizeof(char) * 100);
+        sprintf($$.code, "%s = %s && %s", $$.place, $1.place, $3.place);
+        quad_add($$.code);
     }
     | ebarateSade AND_KW ebarateSade
     {
         printf("Rule 66 \t\t ebarateSade -> ebarateSade AND_KW ebarateSade \n");
 
-        $1.true_list = new_label();
-        $1.false_list = $$.false_list;
-        $3.true_list = $$.true_list;
-        $3.false_list = $$.false_list;
+        // $1.true_list = new_label();
+        // $1.false_list = $$.false_list;
+        // $3.true_list = $$.true_list;
+        // $3.false_list = $$.false_list;
+        // $$.code = malloc(sizeof(char) * 100);
+        // sprintf($$.code, "%s %s: %s", $1.code, $1.true_list, $3.code);
+
+        // printf("\n\n%s\n\n", $$.code);
+
+        SymbolNode node = install_temp_id($1.type);
+        $$.type = $1.type;
+        $$.place = ALLOC_STR(strlen(node->symbol_id));
         $$.code = malloc(sizeof(char) * 100);
-        sprintf($$.code, "%s %s: %s", $1.code, $1.true_list, $3.code);
-
-        printf("\n\n%s\n\n", $$.code);
-
+        sprintf($$.code, "%s = %s && %s", $$.place, $1.place, $3.place);
+        quad_add($$.code);
     }
     | ebarateSade XOR_KW ebarateSade
     {
@@ -471,6 +509,7 @@ ebarateRabetei:
     ebarateRiaziManteghi
     {
         printf("Rule 71 \t\t ebarateRabetei -> ebarateRiaziManteghi \n");
+        $$ = $1;
     }
     | ebarateRiaziManteghi amalgareRabetei ebarateRiaziManteghi
     {
@@ -581,21 +620,22 @@ amalgareYegani:
 amel:
     taghirpazir
     {
-        printf("Rule 90 \t\t amel -> taghirpazir \n");
+        printf("Rule 90 \t\t amel -> taghirpazir(%s) \n", $1.place);
 
         $$ = $1;
     }
     | taghirNApazir
     {
         printf("Rule 91 \t\t amel -> taghirNApazir \n");
+
+        $$ = $1;
     }
     ;
 taghirpazir:
     IDENTIFIER
     {
-        printf("Rule 92 \t\t taghirpazir -> IDENTIFIER \n");
-        // char *t = ;
-        // printf("(((((((((((((((((((((((((((((((%s\n", t);
+        printf("Rule 92 \t\t taghirpazir -> IDENTIFIER(%s) \n", $1.text);
+        
         SymbolNode node = search_id($1.text);
         if (node == NULL)
         {
@@ -603,7 +643,12 @@ taghirpazir:
             $$.place = NULL;
         }
         else
-            $$.place = node->symbol_id;
+        {
+            $$.place = ALLOC_STR((strlen(node->symbol_id) + 1) * sizeof(char));
+            strcpy($$.place, node->symbol_id);
+            printf("place is %s\n", $$.place);
+            $$.type = node->symbol_type;
+        }
     }
     | taghirpazir OPEN_BRACKET ebarat CLOSE_BRACKET
     {
@@ -611,7 +656,7 @@ taghirpazir:
     }
     | taghirpazir DOT IDENTIFIER
     {
-        printf("Rule 94 \t\t taghirpazir -> taghirpazir DOT IDENTIFIER \n");
+        printf("Rule 94 \t\t taghirpazir -> taghirpazir DOT IDENTIFIER(%s) \n", $3.text);
     }
     ;
 taghirNApazir:
@@ -631,7 +676,7 @@ taghirNApazir:
 sedaZadan:
     IDENTIFIER OPEN_PARENTHESIS bordareVorudi CLOSE_PARENTHESIS
     {
-        printf("Rule 98 \t\t sedaZadan -> IDENTIFIER OPEN_PARENTHESIS bordareVorudi CLOSE_PARENTHESIS \n");
+        printf("Rule 98 \t\t sedaZadan -> IDENTIFIER(%s) OPEN_PARENTHESIS bordareVorudi CLOSE_PARENTHESIS \n", $1.text);
     }
     ;
 bordareVorudi:
