@@ -109,3 +109,8 @@ void lllist_go_first(LLList lllist)
 {
     lllist->__current_node = lllist->__first_node;
 }
+
+void lllist_release(LLList lllist)
+{
+    // TODO Implement the release function
+}
