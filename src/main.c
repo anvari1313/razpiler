@@ -4,18 +4,14 @@
 //#include <wchar.h>
 //#include "scanner/pp.h"
 #include <locale.h>
-//#include "symtable/kwtable.h"
-#include "util/llstack/llstack.h"
-#include "util/lllist/lllist.h"
-
-int *f(int a)
-{
-    int *r = malloc(4);
-    (*r) = a;
-    return r;
-}
+#include "symtable/symtable.h"
+//#include "util/llstack/llstack.h"
+//#include "util/lllist/lllist.h"
+#include "ircg/quadruple/quad.h"
 
 extern LLList lexeme_list;
+
+extern void parse_file(char *path);
 
 int main() {
 //    add_kw("insert");
@@ -28,16 +24,19 @@ int main() {
 
 
 
-    char *locale = setlocale(LC_ALL, "");       // Set the locale for reading the persian characters
-    wprintf(L"-------------------------------------------\n");
-    FileLine *start = scan_file("/Users/invisible/Desktop/input2 (1).txt");
-    FileLine *current = start->next_line;
-
-    while (lllist_step_forward(lexeme_list))
-    {
-        wprintf(L"------------------------------------***------------\n");
-        wprintf(L"%s\n", (char *)lllist_get_current(lexeme_list));
-    }
+//    char *locale = setlocale(LC_ALL, "");       // Set the locale for reading the persian characters
+    char r[20];
+    sprintf(r, "L%d", 12);
+//    wprintf(L"-------------------------------------------\n");
+//    wprintf(L"%s", r);
+//    FileLine *start = scan_file("/Users/invisible/Desktop/input2 (1).txt");
+//    FileLine *current = start->next_line;
+//
+//    while (lllist_step_forward(lexeme_list))
+//    {
+//        wprintf(L"------------------------------------***------------\n");
+//        wprintf(L"%s\n", (char *)lllist_get_current(lexeme_list));
+//    }
 //
 //    while(current != NULL)
 //    {
@@ -54,8 +53,31 @@ int main() {
      * /**/
 
 
-
 //    build_f2e_bst();
 
+    init_symbol_table();
+    quad_init();
+//    quad_add("This");
+//    quad_add("That");
+//    quad_add("We");
+//    print_quad();
+
+    parse_file("/home/ahmad/CLionProjects/razpiler/resource/input.raz");
+    printf("\n\n\n\n\n");
+    printf("Symbol table :\n");
+    symbol_print();
+    print_quad();
+
+//    install_id("t", 1);
+//    install_id("res", 1);
+//    install_id("we", 13);
+//
+
+//
+//    if (search_id("res") == NULL)
+//        printf("res is not found\n");
+//
+//    if (search_id("she") == NULL)
+//        printf("she is not found\n");
     return EXIT_SUCCESS;
 }
