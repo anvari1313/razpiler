@@ -644,10 +644,10 @@ taghirpazir:
         }
         else
         {
-            $$.place = ALLOC_STR((strlen(node->symbol_id) + 1) * sizeof(char));
-            strcpy($$.place, node->symbol_id);
-            printf("place is %s\n", $$.place);
-            $$.type = node->symbol_type;
+            // $$.place = ALLOC_STR((strlen(node->symbol_id) + 1) * sizeof(char));
+            // strcpy($$.place, node->symbol_id);
+            // printf("place is %s\n", $$.place);
+            // $$.type = node->symbol_type;
         }
     }
     | taghirpazir OPEN_BRACKET ebarat CLOSE_BRACKET
