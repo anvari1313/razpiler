@@ -66,9 +66,12 @@ FileLine *separate_lines(FILE *file)
     long long line_num = 1;
 
     buffer = BUFFER_ALLOC(buffer_size);
+    c = fgetwc(file);
 
-    while ((c = fgetwc(file)) != WEOF)
+    while ((c != WEOF) && (c != EOF))
     {
+//        putwchar(c);
+//        wprintf(L"%lc%d", c, c);
         if (IS_NEWLINE(c))
         {
             buffer[buffer_used] = L'\0';
@@ -85,6 +88,8 @@ FileLine *separate_lines(FILE *file)
             buffer[buffer_used++] = c;
             if (buffer_used == buffer_size) enlarge_buffer(&buffer, &buffer_size); // Largest buffer should be allocated
         }
+
+        c = fgetwc(file);
     }
 
     if (wcslen(buffer) != 0) new_line(&current_line_pointer, buffer, buffer_used, line_num, file);
@@ -115,4 +120,12 @@ void new_line(FileLine **current_line_pointer,wchar_t *line_content, size_t line
 
     (*current_line_pointer)->next_line = node;
     (*current_line_pointer) = node;
+}
+
+void scan(char *path)
+{
+    char *convert = "convert.t";
+    char *command = malloc((strlen(path) + 50) * sizeof(char));
+    sprintf(command ,"java Converter %s %s", path, SCAN_PATH);
+    system(command);
 }

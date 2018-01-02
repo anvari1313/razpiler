@@ -4,6 +4,7 @@
 #ifndef RAZPILER_SCANNER_H
 #define RAZPILER_SCANNER_H
 
+#define SCAN_PATH "convert.t"
 #include <stdio.h>
 #include <wchar.h>
 #include "type.h"
@@ -14,6 +15,6 @@
  * @return
  */
 FileLine *scan_file(char *);
-
+void scan(char *);
 
 #endif //RAZPILER_SCANNER_H
