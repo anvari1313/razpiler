@@ -38,7 +38,7 @@ FileLine *scan_file(char *file_path)
     {
 //        wprintf(L"%ls       ", current->line_content);
         char *str = preprocess_line(current);
-        wprintf(L"00%s00\n", str);
+//        wprintf(L"00%s00\n", str);
 //        start_lex(str, current);
 //        func(str, current);
 //        wprintf(L"--%ls--|--%s--\n", current->line_content, str);
@@ -108,7 +108,7 @@ void new_line(FileLine **current_line_pointer,wchar_t *line_content, size_t line
 {
     FileLine *node = LINE_ALLOC();
     node->line_content = (wchar_t *)malloc((line_size + 1) * sizeof(wchar_t));
-    wcsncpy(node->line_content, line_content, line_size);
+    wcsncpy(node->line_content, line_content, line_size + 1);
     node->line_num = line_num;
     node->file = file;
     node->next_line = NULL;
