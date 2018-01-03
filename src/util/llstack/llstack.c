@@ -35,7 +35,7 @@ void llstack_pop(LLStack llstack)
 {
     if (llstack->__start_node != NULL)
     {
-        free(llstack->__last_node->__data);     // Free the data section
+//        free(llstack->__last_node->__data);     // Free the data section
         if (llstack->__last_node == llstack->__start_node)
         {
             free(llstack->__last_node);
@@ -59,8 +59,9 @@ LLStackData llstack_top(LLStack llstack)
 
 LLStackData llstack_top_pop(LLStack llstack)
 {
-    // TODO implement this part
-    return NULL;
+    LLStackData data = llstack_top(llstack);
+    llstack_pop(llstack);
+    return data;
 }
 
 void llstack_release(LLStack llstack)
