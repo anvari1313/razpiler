@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <locale.h>
 
-CharMapBSTNode *e2f_bst_root;
-CharMapBSTNode *f2e_bst_root;
 
 char map_to_english(wchar_t c)
 {
@@ -301,14 +299,6 @@ wchar_t map_to_farsi(char c)
     return result;
 }
 
-CharMapBSTNode *alloc_new_node()
-{
-    CharMapBSTNode *node = (CharMapBSTNode *)malloc(sizeof(CharMapBSTNode));
-    node->left_child = NULL;
-    node->right_child = NULL;
-
-    return node;
-}
 
 char *preprocess_line(FileLine *file_line)
 {
@@ -320,70 +310,6 @@ char *preprocess_line(FileLine *file_line)
     return preprocessed_line;
 }
 
-// TODO complete this this function
-void build_f2e_bst()
-{
-    f2e_bst_root = NULL;
-
-
-    FILE *charset_file = fopen(FILE_PATH_F2E_CHARSET, "r");
-
-    if (charset_file == NULL)
-    {
-        printf("file %s not found.\n", FILE_PATH_F2E_CHARSET);
-        exit(-1);
-    }
-
-    wchar_t c;
-    f2e_bst_root = alloc_new_node();
-
-
-    f2e_bst_root->f_char = fgetwc(charset_file);    // Read the first farsi character in the file
-    f2e_bst_root->e_char = (char)fgetc(charset_file);     // Read the first mapped character
-
-
-    while ((c = fgetwc(charset_file)) != WEOF)
-    {
-        CharMapBSTNode *node = alloc_new_node();
-        node->f_char = c;
-        node->e_char = (char)fgetc(charset_file);
-
-        // To add the new node to the bst
-        CharMapBSTNode *current = f2e_bst_root;
-        CharMapBSTNode *parent = NULL;
-        while (current != NULL)
-        {
-            if (current->f_char - node->f_char > 0)
-            {
-                parent = current;
-                current = current->left_child;
-            }
-            else if (current->f_char - node->f_char < 0)
-            {
-                parent = current;
-                current = current->right_child;
-            }
-            else        // Two farsi characters are the same :|
-            {
-                wprintf(L"Error!!!!\n");
-                exit(-1);
-            }
-        }
-
-        if (parent->f_char - node->f_char > 0)
-        {
-            parent->left_child = node;
-        }
-        else /* if (parent->f_char - node->f_char > 0)*/
-        {
-            parent->right_child = node;
-        }
-
-    }
-
-
-
-}
 
 void build_e2f_bst()
 {
