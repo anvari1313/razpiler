@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "kwtable.h"
+#include "../util/lllist/lllist.h"
 
 int temp_counter;
 
@@ -77,3 +78,127 @@ SymbolNode install_temp_id(unsigned char type)
     sprintf(temp_id, "t%d", temp_counter++);
     return install_id(temp_id, type);
 }
+
+void symtable_init()
+{
+    lllist_init(&functions_list);
+    lllist_init(&functions_params_list);
+}
+
+void start_function_list()
+{
+    lllist_init(&functions_params_list);
+}
+
+void new_function_param(char * name, unsigned char type)
+{
+    Symbol s = malloc(sizeof(Symbol_t));
+
+}
+
+FunctionBlock new_function(char *name, unsigned char type)
+{
+    FunctionBlock fb = malloc(sizeof(FunctionBlock_t));
+    fb->name = malloc((strlen(name) + 1) * sizeof(char));
+    strcpy(fb->name, name);
+    fb->function_params = functions_params_list;
+    fb->function_params_size = functions_params_list->size;
+    fb->function_symbols_size = 0;
+    fb->access_link = malloc(__ACCESS_LINK_LABEL_LEN * sizeof(char));
+    sprintf(fb->access_link, "fal%d:", functions_list->size);
+    llstack_init(&(fb->function_scope));
+    fb->return_val = malloc(sizeof(Symbol_t));
+    fb->return_val->type = type;
+
+    lllist_push_front(functions_list, fb);
+
+    return fb;
+}
+
+void start_scope()
+{
+    lllist_go_last(functions_list);
+    FunctionBlock current_fb = (FunctionBlock)lllist_get_current(functions_list);
+
+    LLList symbols_scope_list;
+    lllist_init(&symbols_scope_list);
+
+    llstack_push(current_fb->function_scope, symbols_scope_list);
+}
+
+Symbol add_symbol(char *name, unsigned char type)
+{
+    lllist_go_last(functions_list);
+    FunctionBlock current_fb = (FunctionBlock)lllist_get_current(functions_list);
+
+    Symbol s = malloc(sizeof(Symbol_t));
+    s->id = current_fb->function_symbols_size++;
+    s->name = malloc((strlen(name) + 1) * sizeof(char));
+    strcpy(s->name, name);
+    s->type = type;
+
+    lllist_push_front((LLList)llstack_top(current_fb->function_scope), s);
+    return s;
+}
+
+void end_scope()
+{
+    lllist_go_last(functions_list);
+    FunctionBlock current_fb = (FunctionBlock)lllist_get_current(functions_list);
+    llstack_pop(current_fb->function_scope);
+}
+
+char *symbol_address(Symbol s)
+{
+    char *address = malloc(120 * sizeof(char));
+    sprintf(address, "top_stack()->symbols[%d].value.intval", s->id);
+    return address;
+}
+
+char *enviroment(char *name)
+{
+    Symbol result = NULL;
+
+    lllist_go_last(functions_list);
+    FunctionBlock current_fb = (FunctionBlock)lllist_get_current(functions_list);
+
+    bool is_found = false;
+
+
+    LLStack temp;
+    llstack_init(&temp);
+
+    while ((!llstack_is_empty(current_fb->function_scope))
+           &&
+            (!is_found))
+    {
+        LLList current_scope_list = llstack_top(current_fb->function_scope);
+        if (current_scope_list->size != 0)
+        {
+            lllist_go_first(current_scope_list);
+            do
+            {
+                Symbol s = lllist_get_current(current_scope_list);
+                if (strcmp(s->name, name) == 0)
+                {
+                    is_found = true;
+                    result = s;
+                }
+            }
+            while (lllist_step_forward(current_scope_list));
+        }
+
+        llstack_push(temp, llstack_top_pop(current_fb->function_scope));
+    }
+
+    while (!llstack_is_empty(temp))
+    {
+        llstack_push(current_fb->function_scope, llstack_top_pop(temp));
+    }
+
+    if (is_found)
+        return symbol_address(result);
+    else
+        return NULL;
+}
+

@@ -4,15 +4,42 @@
 #include "../util/llstack/llstack.h"
 #include "../util/lllist/lllist.h"
 
+#define __ACCESS_LINK_LABEL_LEN 50
+
 #define SYMBOL_TYPE_BOOL 10
 #define SYMBOL_TYPE_INT 20
 #define SYMBOL_TYPE_REAL 30
 #define SYMBOL_TYPE_CHAR 40
 
 typedef struct {
-    LLStack function_stack;
-} *FunctionBlock;
+    char *name;
+    unsigned char type;
+    int id;
+} *Symbol, Symbol_t;
 
+typedef struct {
+    char *name;
+    char *access_link;
+    LLList function_params;
+    int function_params_size;
+    LLStack function_scope;
+    int function_symbols_size;
+    Symbol return_val;
+} *FunctionBlock, FunctionBlock_t;
+
+LLList functions_list;
+LLList functions_params_list;
+
+void symtable_init();
+void start_function_list();
+void new_function_param(char *, unsigned char);
+FunctionBlock new_function(char *, unsigned char);
+void start_scope();
+Symbol add_symbol(char *, unsigned char);
+void end_scope();
+char *enviroment(char *);
+
+///////////////////////////
 LLList symbols_list;
 
 typedef struct
