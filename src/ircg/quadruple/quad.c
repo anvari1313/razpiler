@@ -57,3 +57,8 @@ void quad_print()
     }
     while (lllist_step_forward(quad_list) != false);
 }
+
+int next_quad()
+{
+    return quad_it;
+}

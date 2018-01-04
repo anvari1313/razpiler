@@ -18,6 +18,7 @@ int quad_it;
 void quad_init();
 Quad quad_add(char *);
 Quad quad_add4(char *, char *, char *, char *);
+int next_quad();
 
 void quad_print();
 #endif //RAZPILER_QUAD_H
