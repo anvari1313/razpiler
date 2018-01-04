@@ -105,14 +105,16 @@ bool lllist_step_forward(LLList);
  */
 bool lllist_step_backward(LLList);
 
+void lllist_go_last(LLList);
+
+void lllist_go_first(LLList);
+
+void lllist_concat(LLList, LLList);
+
 /**
  * Release the resources allocated to the lllist
  * @param lllist The lllist that should be un allocate from the memory
  */
 void lllist_release(LLList);
-
-void lllist_go_last(LLList);
-
-void lllist_go_first(LLList);
 
 #endif //RAZPILER_LLLIST_H

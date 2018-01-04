@@ -114,3 +114,11 @@ void lllist_release(LLList lllist)
 {
     // TODO Implement the release function
 }
+
+void lllist_concat(LLList list1, LLList list2)
+{
+    list1->__last_node->__ll_next = list2->__first_node;
+    list2->__first_node->__ll_last = list1->__last_node;
+    list1->size += list2->size;
+    list1->__last_node = list2->__last_node;
+}
