@@ -151,11 +151,66 @@ void end_scope()
 char *symbol_address(Symbol s)
 {
     char *address = malloc(120 * sizeof(char));
-    sprintf(address, "top_stack()->symbols[%d].value.intval", s->id);
+    char *type = malloc(10 * sizeof(char));
+    switch(s->type)
+    {
+        case SYMBOL_TYPE_BOOL:
+            strcpy(type, "boolval");
+            break;
+        case SYMBOL_TYPE_CHAR:
+            strcpy(type, "charval");
+            break;
+        case SYMBOL_TYPE_INT:
+            strcpy(type, "intval");
+            break;
+        case SYMBOL_TYPE_REAL:
+            strcpy(type, "floatval");
+            break;
+        default:                    // Default is handled by int
+            strcpy(type, "intval");
+    }
+    sprintf(address, "top_stack()->symbols[%d].value.%s", s->id, type);
+    return address;
+}
+
+char *param_address(Symbol s)
+{
+    char *address = malloc(120 * sizeof(char));
+    char *type = malloc(10 * sizeof(char));
+    switch(s->type)
+    {
+        case SYMBOL_TYPE_BOOL:
+            strcpy(type, "boolval");
+            break;
+        case SYMBOL_TYPE_CHAR:
+            strcpy(type, "charval");
+            break;
+        case SYMBOL_TYPE_INT:
+            strcpy(type, "intval");
+            break;
+        case SYMBOL_TYPE_REAL:
+            strcpy(type, "floatval");
+            break;
+        default:                    // Default is handled by int
+            strcpy(type, "intval");
+    }
+    sprintf(address, "top_stack()->params[%d].value.%s", s->id, type);
     return address;
 }
 
 char *enviroment(char *name)
+{
+    Symbol s = search_for_symbol(name);
+    if (s)
+        return symbol_address(s);
+    s = search_for_param(name);
+    if (s)
+        return param_address(s);
+
+    return NULL;
+}
+
+Symbol search_for_symbol(char *name)
 {
     Symbol result = NULL;
 
@@ -170,7 +225,7 @@ char *enviroment(char *name)
 
     while ((!llstack_is_empty(current_fb->function_scope))
            &&
-            (!is_found))
+           (!is_found))
     {
         LLList current_scope_list = llstack_top(current_fb->function_scope);
         if (current_scope_list->size != 0)
@@ -196,9 +251,28 @@ char *enviroment(char *name)
         llstack_push(current_fb->function_scope, llstack_top_pop(temp));
     }
 
-    if (is_found)
-        return symbol_address(result);
-    else
+    return result;
+}
+
+Symbol search_for_param(char *name)
+{
+    Symbol result = NULL;
+
+    lllist_go_last(functions_list);
+    FunctionBlock current_fb = (FunctionBlock)lllist_get_current(functions_list);
+    LLList params = current_fb->function_params;
+
+    if (lllist_is_empty(params))
         return NULL;
+
+    lllist_go_first(params);
+
+    do{
+        Symbol s = lllist_get_current(params);
+        if (strcmp(s->name, name))
+            return s;
+    }while (lllist_step_forward(params));
+
+    return NULL;
 }
 

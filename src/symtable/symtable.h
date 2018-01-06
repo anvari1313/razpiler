@@ -37,6 +37,8 @@ FunctionBlock new_function(char *, unsigned char);
 void start_scope();
 Symbol add_symbol(char *, unsigned char);
 void end_scope();
+Symbol search_for_symbol(char *);
+Symbol search_for_param(char *);
 char *enviroment(char *);
 
 ///////////////////////////
