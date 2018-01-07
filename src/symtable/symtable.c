@@ -83,6 +83,8 @@ void symtable_init()
 {
     lllist_init(&functions_list);
     lllist_init(&functions_params_list);
+    temp_symbol_counter = 0;
+    const_symbol_counter = 0;
 }
 
 void start_function_list()
@@ -274,5 +276,14 @@ Symbol search_for_param(char *name)
     }while (lllist_step_forward(params));
 
     return NULL;
+}
+
+char *add_const_symbol(union Value value, unsigned char type) {
+    char *const_symbol_name = malloc(20 * sizeof(char));
+    sprintf(const_symbol_name, "c%d", const_symbol_counter ++);
+    Symbol s = add_symbol(const_symbol_name, type);
+    s->is_const_val = true;
+    s->const_val = value;
+    return enviroment(const_symbol_name);;
 }
 
