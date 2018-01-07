@@ -45,13 +45,17 @@
     } eval;
     unsigned char id_type;
     char *label;
+    float floatval;
+    int intval;
 }
 
 %token PROGRAM_KW STRUCT_KW CONST_KW INTEGER_KW REAL_KW BOOLEAN_KW CHARACTER_KW IF_KW THEN_KW ELSE_KW SWITCH_KW END_KW STATE_KW DEFAULT_KW WHEN_KW RETURN_KW BREAK_KW OR_KW AND_KW NOT_KW XOR_KW ANDTHEN_KW SEMICOLON COLON COMMA OPEN_BRACKET CLOSE_BRACKET OPEN_CURLY_BRACES CLOSE_CURLY_BRACES OPEN_PARENTHESIS CLOSE_PARENTHESIS DOT LT_OP GT_OP EQ_OP PLUS_PLUS_OP MINUS_MINUS_OP PLUS_OP MINUS_OP MULTIPLY_OP DIVIDE_OP QUESTIONMARK_OP PERCENT_OP IDENTIFIER NUMBER CONST_CHAR REAL_NUMBER BOOLEAN_FALSE BOOLEAN_TRUE
 
-%type <eval> ebarateSade ebarat ebarateRabetei ebarateRiaziManteghi amalgareRabetei taghirpazir amel ebarateYegani IDENTIFIER taghirNApazir
+%type <eval> ebarateSade ebarat ebarateRabetei ebarateRiaziManteghi amalgareRabetei taghirpazir amel ebarateYegani IDENTIFIER taghirNApazir meghdareSabet
 %type <id_type> jens jenseMahdud
 %type <label> startOFWhile
+%type <intval> NUMBER
+%type <floatval> REAL_NUMBER
 
 %left AND_KW
 %left OR_KW
@@ -73,6 +77,7 @@ program:
 startProgram:
     LAMBDA
     {
+        lllist_init(&identifiers_list);
         quad_add("// This is strt of file\n");
     };
 endProgram:
@@ -125,27 +130,29 @@ tarifhayeMahalli:
 tarifeMoteghayyereMahdud:
     jenseMahdud tarifhayeMotheghayyerha SEMICOLON
     {
-        do
+        if (!lllist_is_empty(identifiers_list))
         {
-            install_id(lllist_get_current(identifiers_list), $1);
+            lllist_go_first(identifiers_list);
+            do{
+                char *identifier_name = lllist_get_current(identifiers_list);
+                printf("Identifier %s is defined with type %d\n", identifier_name, $1);
+                add_symbol(identifier_name, $1);
+            }while (lllist_step_forward(identifiers_list));
         }
-        while (lllist_step_backward(identifiers_list) != false);
-
-        lllist_release(identifiers_list);
-        
-        printf("Rule 10 \t\t tarifeMoteghayyereMahdud -> jenseMahdud tarifhayeMotheghayyerha SEMICOLON \n");
+        printf("Rule 10 \t\t tarifeMoteghayyereMahdud -> jenseMahdud(%d) tarifhayeMotheghayyerha SEMICOLON \n", $1);
+        lllist_init(&identifiers_list);
     }
     ;
 jenseMahdud:
     CONST_KW jens
     {
-        lllist_init(&identifiers_list);
+        // lllist_init(&identifiers_list);
         printf("Rule 11 \t\t jenseMahdud -> CONST_KW jens \n");
         $$ = $2;
     }
     | jens
     {
-        lllist_init(&identifiers_list);
+        // lllist_init(&identifiers_list);
         printf("Rule 12 \t\t jenseMahdud -> jens \n");
         $$ = $1;
     }
@@ -214,16 +221,26 @@ tarifeShenaseyeMoteghayyer:
     }
     ;
 tarifeTabe:
-    jens IDENTIFIER OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle
+    functionHeader mForStartFunction jomle mForEndFunction
     {
-        // printf("-->>-->>%d\n", $1);
+        printf("Function is reduces\n");
+    }
+    ;
+
+functionHeader:
+    jens IDENTIFIER OPEN_PARENTHESIS mForStartFunctionPrams vorudi mForEndFunctionPrams CLOSE_PARENTHESIS
+    {
+        new_function($2.text , $1);
         printf("Rule 24 \t\t tarifeTabe -> jens IDENTIFIER(%s) OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle \n", $2.text);
     }
-    | IDENTIFIER OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle
+    |
+    IDENTIFIER OPEN_PARENTHESIS mForStartFunctionPrams vorudi mForEndFunctionPrams CLOSE_PARENTHESIS
     {
+        new_function($1.text , SYMBOL_TYPE_VOID);
         printf("Rule 25 \t\t tarifeTabe -> IDENTIFIER(%s) OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle \n", $1.text);
     }
     ;
+
 vorudi:
     vorudiha
     {
@@ -303,10 +320,42 @@ jomleyeMorakkab:
         printf("Rule 41 \t\t jomleyeMorakkab -> OPEN_CURLY_BRACES tarifhayeMahalli jomleha CLOSE_CURLY_BRACES \n");
     }
     ;
+
+mForStartFunction:
+    LAMBDA 
+    {
+        start_scope();
+        printf("Function is started.\n");
+    }
+    ;
+
+mForEndFunction:
+    LAMBDA 
+    {
+        end_scope();
+        printf("Function is ended.\n");
+    }
+    ;
+mForStartFunctionPrams:
+    LAMBDA
+    {
+        start_function_list();
+        printf("Function params is started.\n");
+    }
+    ;
+mForEndFunctionPrams:
+    LAMBDA
+    {
+        printf("Function params is ended.\n");
+    }
+    ;
+
 mForScope:
-    LAMBDA {
+    LAMBDA 
+    {
         printf("Scope is created.\n");
     }
+    ;
 
 jomleha:
     jomleha jomle
@@ -322,7 +371,7 @@ jomleyeEbarat:
     ebarat SEMICOLON
     {
         printf("Rule 44 \t\t jomleyeEbarat -> ebarat SEMICOLON \n");
-        quad_add($1.code);
+        // quad_add($1.code);
     }
     | SEMICOLON
     {
@@ -378,7 +427,7 @@ startOFWhile:
         $$ = new_label();
         char *code = ALLOC_STR(100);
         sprintf(code, "%s:", $$);
-        quad_add(code);
+        // quad_add(code);
     };
 
 jomleyeBazgasht:
@@ -401,14 +450,14 @@ ebarat:
     taghirpazir EQ_OP ebarat
     {
         printf("Rule 57 \t\t ebarat -> taghirpazir EQ_OP ebarat \n");
-        SymbolNode node = install_temp_id($1.type);
-        $$.place = ALLOC_STR(strlen(node->symbol_id) + 2);
-        $$.code = ALLOC_STR(100);
+        // SymbolNode node = install_temp_id($1.type);
+        // $$.place = ALLOC_STR(strlen(node->symbol_id) + 2);
+        // $$.code = ALLOC_STR(100);
 
-        strcpy($$.place, node->symbol_id);
-        $$.type = node->symbol_type;
-        sprintf($$.code, "$s = $s = $s", $$.place, $1.place, $3.place);
-        quad_add($$.code);
+        // strcpy($$.place, node->symbol_id);
+        // $$.type = node->symbol_type;
+        // sprintf($$.code, "$s = $s = $s", $$.place, $1.place, $3.place);
+        // quad_add($$.code);
     }
     | taghirpazir PLUS_OP EQ_OP ebarat
     {
@@ -453,12 +502,14 @@ ebarateSade:
         // sprintf($$.code, "%s %s:%s", $1.code, $1.false_list, $3.code);
 
         // printf("\n\n%s\n\n", $$.code);
-        SymbolNode node = install_temp_id($1.type);
+        printf("Log1\n");
+        // SymbolNode node = install_temp_id($1.type);
+        
         $$.type = $1.type;
-        $$.place = ALLOC_STR(strlen(node->symbol_id));
+        // $$.place = ALLOC_STR(strlen(node->symbol_id));
         $$.code = malloc(sizeof(char) * 100);
         sprintf($$.code, "%s = %s && %s", $$.place, $1.place, $3.place);
-        quad_add($$.code);
+        // quad_add($$.code);
     }
     | ebarateSade AND_KW ebarateSade
     {
@@ -473,12 +524,12 @@ ebarateSade:
 
         // printf("\n\n%s\n\n", $$.code);
 
-        SymbolNode node = install_temp_id($1.type);
-        $$.type = $1.type;
-        $$.place = ALLOC_STR(strlen(node->symbol_id));
-        $$.code = malloc(sizeof(char) * 100);
-        sprintf($$.code, "%s = %s && %s", $$.place, $1.place, $3.place);
-        quad_add($$.code);
+        // SymbolNode node = install_temp_id($1.type);
+        // $$.type = $1.type;
+        // $$.place = ALLOC_STR(strlen(node->symbol_id));
+        // $$.code = malloc(sizeof(char) * 100);
+        // sprintf($$.code, "%s = %s && %s", $$.place, $1.place, $3.place);
+        // quad_add($$.code);
     }
     | ebarateSade XOR_KW ebarateSade
     {
@@ -636,19 +687,19 @@ taghirpazir:
     {
         printf("Rule 92 \t\t taghirpazir -> IDENTIFIER(%s) \n", $1.text);
         
-        SymbolNode node = search_id($1.text);
-        if (node == NULL)
-        {
-            error_id_not_declared($1.text);
-            $$.place = NULL;
-        }
-        else
-        {
-            // $$.place = ALLOC_STR((strlen(node->symbol_id) + 1) * sizeof(char));
-            // strcpy($$.place, node->symbol_id);
-            // printf("place is %s\n", $$.place);
-            // $$.type = node->symbol_type;
-        }
+        // SymbolNode node = search_id($1.text);
+        // if (node == NULL)
+        // {
+        //     error_id_not_declared($1.text);
+        //     $$.place = NULL;
+        // }
+        // else
+        // {
+        //     // $$.place = ALLOC_STR((strlen(node->symbol_id) + 1) * sizeof(char));
+        //     // strcpy($$.place, node->symbol_id);
+        //     // printf("place is %s\n", $$.place);
+        //     // $$.type = node->symbol_type;
+        // }
     }
     | taghirpazir OPEN_BRACKET ebarat CLOSE_BRACKET
     {
@@ -702,10 +753,18 @@ bordareVorudiha:
 meghdareSabet:
     NUMBER
     {
-        printf("Rule 103 \t\t meghdareSabet -> NUMBER \n");
+        union Value v;
+        v.intval = $1;
+        $$.place = add_const_symbol(v, SYMBOL_TYPE_INT);
+
+        printf("Rule 103 \t\t meghdareSabet -> NUMBER(%d) \n", $1);
     }
     | REAL_NUMBER
     {
+        union Value v;
+        v.floatval = $1;
+        $$.place = add_const_symbol(v, SYMBOL_TYPE_REAL);
+
         printf("Rule 104 \t\t meghdareSabet -> REAL_NUMBER \n");
     }
     | CONST_CHAR
@@ -714,10 +773,16 @@ meghdareSabet:
     }
     | BOOLEAN_TRUE
     {
+        union Value v;
+        v.boolval = false;
+        $$.place = add_const_symbol(v, SYMBOL_TYPE_BOOL);
         printf("Rule 106 \t\t meghdareSabet -> BOOLEAN_TRUE \n");
     }
     | BOOLEAN_FALSE
     {
+        union Value v;
+        v.boolval = false;
+        $$.place = add_const_symbol(v, SYMBOL_TYPE_BOOL);
         printf("Rule 107 \t\t meghdareSabet -> BOOLEAN_FALSE \n");
     }
     ;
