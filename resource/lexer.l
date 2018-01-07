@@ -349,8 +349,14 @@ CONST_CHAR [\'][\\]?{CHARACTER}[\']
     strcpy(yylval.eval.text, yytext);
     return IDENTIFIER;
     }
-{NUMBER} {add_node(yytext, TYPE_NUMBER); return NUMBER;}
-{REAL_NUMBER} {add_node(yytext, TYPE_REAL_NUMBER); return REAL_NUMBER;}
+{NUMBER} {
+    yylval.intval = atoi(yytext);
+    return NUMBER;
+    }
+{REAL_NUMBER} {
+    yylval.floatval = atof(yytext);
+    return REAL_NUMBER;
+    }
 {CONST_CHAR} {add_node(yytext, TYPE_CONST_CHAR); return CONST_CHAR; }
 %%
 
