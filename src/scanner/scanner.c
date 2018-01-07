@@ -124,7 +124,7 @@ void new_line(FileLine **current_line_pointer,wchar_t *line_content, size_t line
 
 void scan(char *path)
 {
-    char *convert = "convert.t";
+    char *convert = SCAN_PATH;
     char *command = malloc((strlen(path) + 50) * sizeof(char));
     sprintf(command ,"java Converter %s %s", path, SCAN_PATH);
     system(command);
