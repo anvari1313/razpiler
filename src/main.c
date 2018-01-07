@@ -11,23 +11,112 @@
 //#include "util/lllist/lllist.h"
 #include "ircg/quadruple/quad.h"
 #include "scanner/pp.h"
+#include "ircg/quadruple/bp.h"
+#include "util/lllist/lllist.h"
 
 extern LLList lexeme_list;
 
 extern void parse_file(char *path);
 
+int *f(int a)
+{
+    int *r = malloc(sizeof(int));
+    (*r) = a;
+    return r;
+}
 
+//int main()
+//{
+//    LLStack s1;
+//    llstack_init(&s1);
+//    llstack_push(s1, f(12));
+//    llstack_push(s1, f(13));
+//    llstack_push(s1, f(14));
+//
+//    LLStack s2;
+//    llstack_init(&s2);
+//
+//}
 int main()
 {
-    const char *file_path = "/home/ahmad/CLionProjects/razpiler/resource/input2.raz";
+    printf("%d\n", atoi("12"));
+    const char *file_path = "../resource/input2.raz";
+
+
     scan(file_path);
 
-    init_symbol_table();
+    symtable_init();
     quad_init();
+
+
+    union Value v;
+    v.boolval = true;
+
+//    char *t = add_const_symbol(v, SYMBOL_TYPE_BOOL);;
+
+
+
+
     parse_file(SCAN_PATH);
+//    quad_print();
+
+
+
+
 
     return EXIT_SUCCESS;
 }
+
+  //////////////////////////////////////////////////////////////////////////////
+ //////////////////////////////// Tests ///////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+/**
+ * Symtable
+ */
+//start_function_list();
+//new_function("main" , SYMBOL_TYPE_INT);
+//start_scope();
+//add_symbol("num", SYMBOL_TYPE_INT);
+//add_symbol("c", SYMBOL_TYPE_CHAR);
+//start_scope();
+//add_symbol("t", SYMBOL_TYPE_CHAR);
+//add_symbol("omega", SYMBOL_TYPE_CHAR);
+//add_symbol("c", SYMBOL_TYPE_CHAR);
+//printf("%s", enviroment("could"));
+//end_scope();
+//end_scope();
+/**
+ * Quad
+ */
+//    quad_add("This is charas");
+//    quad_add("That is chars");
+//    quad_add4("if", "(a<b)", "goto", "_");
+//    quad_print();
+
+/**
+ * Back patch
+ */
+//
+//quad_add4("if", "(a<b)", "goto", "_");
+//LLList l1 = bp_make_list(next_quad());
+//
+//quad_add4("if", "(a<b)", "goto", "_");
+//LLList l2 = bp_make_list(next_quad());
+//LLList l3 = bp_merge(l1, l2);
+//printf("size : %d\n", l3->size);
+//lllist_go_first(l3);
+//
+//do{
+//printf("%d\n", *(int *)lllist_get_current(l3));
+//}while (lllist_step_forward(l3));
+//quad_add4("if", "(a<b)", "goto", "_");
+//quad_add4("if", "(a<b)", "goto", "_");
+//bp_backpatch(l3, 104);
+
+
+
+
+
 //int main() {
 ////    add_kw("insert");
 ////    add_kw("test");
@@ -85,7 +174,7 @@ int main()
 //    printf("\n\n\n\n\n");
 //    printf("Symbol table :\n");
 //    symbol_print();
-//    print_quad();
+//    quad_print();
 //
 ////    FILE *f = fopen("/home/ahmad/CLionProjects/razpiler/resource/input.raz", "r");
 ////    wchar_t * buffer = 0;
