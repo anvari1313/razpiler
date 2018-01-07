@@ -115,6 +115,6 @@ void lllist_concat(LLList, LLList);
  * Release the resources allocated to the lllist
  * @param lllist The lllist that should be un allocate from the memory
  */
-void lllist_release(LLList);
+void lllist_release(LLList *);
 
 #endif //RAZPILER_LLLIST_H
