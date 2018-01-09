@@ -9,6 +9,9 @@ void std_out(const unsigned char type, const unsigned char error)
         case ERROR_FILE_NOT_FOUND:
             printf("File not found\n");
             break;
+        case ERROR_MAIN_NOT_FOUND:
+            printf("starting point not found\n");
+            break;
     }
 
     switch (type)
