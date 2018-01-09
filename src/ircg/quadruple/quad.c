@@ -166,6 +166,7 @@ void quad_export(void (*print_function)(char *))
 
             char symbol_assignment_str[strlen(const_assignment_list_item) + 100];
             sprintf(symbol_assignment_str, "\t%s;\n", const_assignment_list_item);
+
             print_function(symbol_assignment_str);
 
         }while (lllist_step_forward(const_assignment_list));
@@ -180,12 +181,13 @@ void quad_export(void (*print_function)(char *))
 
     quad_call_function(main_fb);
 
+
     lllist_go_first(quad_list);
     do{
         Quad q = lllist_get_current(quad_list);
         char *quad_label_str = quad_label_gen(q);
         char quad_str[strlen(q->arg1) + strlen(q->arg2) + strlen(q->arg3) + strlen(q->arg4) + strlen(quad_label_str) + 4];
-        sprintf(quad_str, (strlen(quad_label_str) == 0)?"\t%s%s %s %s %s;\n" : "%s: %s %s %s %s;\n", quad_label_str, q->arg1, q->arg2, q->arg3, q->arg4);
+        sprintf(quad_str, (strlen(quad_label_str) == 0)?"\t%s%s %s %s %s\n" : "%s: %s %s %s %s\n", quad_label_str, q->arg1, q->arg2, q->arg3, q->arg4);
         print_function(quad_str);
     }while (lllist_step_forward(quad_list));
 
@@ -222,7 +224,8 @@ void set_output_stack_size(int s)
 char *quad_label_gen(Quad quad)
 {
     char *label = malloc(100 * sizeof(char));
-    if (quad->index != -1)
+
+    if (quad->index == -1)
         sprintf(label, "");
     else
         sprintf(label, "l%d", quad->index);
@@ -233,17 +236,17 @@ void quad_add_function_definition(FunctionBlock fb)
 {
     char comment_string[strlen(fb->name) + 100];
     sprintf(comment_string, "// %s function implementation start", fb->name);
-    quad_add(comment_string);
+    quad_add_no_line(comment_string);
 }
 
 void quad_call_function(FunctionBlock fb)
 {
-    quad_add("// main function declaration");
+    quad_add_no_line("// main function declaration");
     char function_stack_str[100];
     sprintf(function_stack_str, "%s_stack%d", fb->name, fb->call_counter);
     char function_stack_dif_str[200];
-    sprintf(function_stack_dif_str, "function %s", function_stack_str);
-    quad_add(function_stack_dif_str);
+    sprintf(function_stack_dif_str, "function %s;", function_stack_str);
+    quad_add_no_line(function_stack_dif_str);
 
     char str1[500];
     char str2[500];
@@ -252,18 +255,25 @@ void quad_call_function(FunctionBlock fb)
     char str5[500];
     char str6[500];
 
-    sprintf(str1, "%s.params = malloc(%s%s * sizeof(symbol))", function_stack_str, fb->name, f_c_str_params);
-    quad_add(str1);
-    sprintf(str2, "%s.symbols = malloc(%s%s * sizeof(symbol))", function_stack_str, fb->name, f_c_str_symbols);
-    quad_add(str2);
-    sprintf(str3, "%s.access_link = &&%s", function_stack_str, fb->access_link);
-    quad_add(str3);
-    sprintf(str4, "%s.control_link = &&%s%s%d", fb->name, FUNCITON_CONTROL_LINK_STR, fb->call_counter);
-    quad_add(str4);
-    sprintf(str5, "push_stack(%s)", function_stack_str);
-    quad_add(str5);
+    sprintf(str1, "%s.params = malloc(%s%s * sizeof(symbol));", function_stack_str, fb->name, f_c_str_params);
+    quad_add_no_line(str1);
+    sprintf(str2, "%s.symbols = malloc(%s%s * sizeof(symbol));", function_stack_str, fb->name, f_c_str_symbols);
+    quad_add_no_line(str2);
+    sprintf(str3, "%s.access_link = &&%s__;", function_stack_str, fb->access_link);
+    quad_add_no_line(str3);
+    sprintf(str4, "%s.control_link = &&%s%s%d;", fb->name, fb->name, FUNCITON_CONTROL_LINK_STR, fb->call_counter);
+    quad_add_no_line(str4);
+    sprintf(str5, "push_stack(%s);", function_stack_str);
+    quad_add_no_line(str5);
 
-    quad_add("goto *(top_stack()->access_link)");
+    quad_add_no_line("goto *(top_stack()->access_link);");
     sprintf(str6, "%s%s%d:", fb->name, FUNCITON_CONTROL_LINK_STR, fb->call_counter);
-    quad_add(str6);
+    quad_add_no_line(str6);
+}
+
+Quad quad_add_no_line(char * str)
+{
+    Quad q = quad_add(str);
+    q->index = -1;
+    return q;
 }

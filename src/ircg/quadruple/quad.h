@@ -28,6 +28,7 @@ int quad_it;
 
 void quad_init();
 Quad quad_add(char *);
+Quad quad_add_no_line(char *);
 Quad quad_add4(char *, char *, char *, char *);
 void quad_call_function(FunctionBlock);
 void quad_add_function_definition(FunctionBlock);
