@@ -7,6 +7,8 @@
 #define DEFAULT_OUTPUT_STACK_SIZE 100
 #define STARTING_POINT_FUNCTION "BRbg"
 
+#define _QUAD_LABEL_PATTERN "l%d"
+
 #define f_c_str_params "_function_params_size"
 #define f_c_str_symbols "_function_symbols_size"
 

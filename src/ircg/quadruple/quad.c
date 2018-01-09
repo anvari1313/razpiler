@@ -175,7 +175,7 @@ void quad_export(void (*print_function)(char *))
         Quad q = lllist_get_current(quad_list);
         char *quad_label_str = quad_label_gen(q);
         char quad_str[strlen(q->arg1) + strlen(q->arg2) + strlen(q->arg3) + strlen(q->arg4) + strlen(quad_label_str) + 4];
-        sprintf(quad_str, (strlen(quad_label_str) == 0)?"\t%s%s %s %s %s\n" : "%s: %s %s %s %s\n", quad_label_str, q->arg1, q->arg2, q->arg3, q->arg4);
+        sprintf(quad_str, (strlen(quad_label_str) == 0)?"\t%s%s %s %s %s\n" : ((strlen(q->arg3) != 0)?"\t%s: %s %s %s %s;\n": "\t%s: %s %s %s %s\n"), quad_label_str, q->arg1, q->arg2, q->arg3, q->arg4);
         print_function(quad_str);
     }while (lllist_step_forward(quad_list));
 
@@ -216,7 +216,7 @@ char *quad_label_gen(Quad quad)
     if (quad->index == -1)
         sprintf(label, "");
     else
-        sprintf(label, "l%d", quad->index);
+        sprintf(label, _QUAD_LABEL_PATTERN, quad->index);
     return label;
 }
 
