@@ -61,8 +61,8 @@
         char *text;
         char *place;
         char *code;
-        char *true_list;
-        char *false_list;
+        void *true_list;
+        void *false_list;
     } eval;
     unsigned char id_type;
     char *label;
@@ -74,6 +74,7 @@
         char *const_symtable_segment_return_link;
         char *function_name;
     }const_segment_labels;
+    int next_quad;
 }
 
 %token PROGRAM_KW STRUCT_KW CONST_KW INTEGER_KW REAL_KW BOOLEAN_KW CHARACTER_KW IF_KW THEN_KW ELSE_KW SWITCH_KW END_KW STATE_KW DEFAULT_KW WHEN_KW RETURN_KW BREAK_KW OR_KW AND_KW NOT_KW XOR_KW ANDTHEN_KW SEMICOLON COLON COMMA OPEN_BRACKET CLOSE_BRACKET OPEN_CURLY_BRACES CLOSE_CURLY_BRACES OPEN_PARENTHESIS CLOSE_PARENTHESIS DOT LT_OP GT_OP EQ_OP PLUS_PLUS_OP MINUS_MINUS_OP PLUS_OP MINUS_OP MULTIPLY_OP DIVIDE_OP QUESTIONMARK_OP PERCENT_OP IDENTIFIER NUMBER CONST_CHAR REAL_NUMBER BOOLEAN_FALSE BOOLEAN_TRUE
@@ -85,6 +86,7 @@
 %type <floatval> REAL_NUMBER
 %type <operator> amalgareRiazi amalgareRabetei
 %type <const_segment_labels> functionHeader
+%type <next_quad> mForBP
 
 %left AND_KW
 %left OR_KW
@@ -541,10 +543,12 @@ ebarat:
     }
     ;
 ebarateSade:
-    ebarateSade OR_KW ebarateSade
+    ebarateSade OR_KW mForBP ebarateSade
     {
         printf("Rule 65 \t\t ebarateSade -> ebarateSade OR_KW ebarateSade \n");
-
+        bp_backpatch($1.false_list, $3);
+        $$.true_list = bp_merge($1.true_list, $4.true_list);
+        $$.false_list = $4.false_list;
         // $1.true_list = $$.true_list;
         // $1.false_list = new_label();
         // $3.true_list = $$.true_list;
@@ -555,16 +559,18 @@ ebarateSade:
         // printf("\n\n%s\n\n", $$.code);
         // SymbolNode node = install_temp_id($1.type);
         
-        $$.type = $1.type;
+        // $$.type = $1.type;
         // $$.place = ALLOC_STR(strlen(node->symbol_id));
-        $$.code = malloc(sizeof(char) * 100);
-        sprintf($$.code, "%s = %s && %s", $$.place, $1.place, $3.place);
+        // $$.code = malloc(sizeof(char) * 100);
+        // sprintf($$.code, "%s = %s && %s", $$.place, $1.place, $3.place);
         // quad_add($$.code);
     }
-    | ebarateSade AND_KW ebarateSade
+    | ebarateSade AND_KW mForBP ebarateSade
     {
         printf("Rule 66 \t\t ebarateSade -> ebarateSade AND_KW ebarateSade \n");
-
+        bp_backpatch($1.true_list, $3);
+        $$.false_list = bp_merge($1.false_list, $4.false_list);
+        $$.true_list = $4.true_list;
         // $1.true_list = new_label();
         // $1.false_list = $$.false_list;
         // $3.true_list = $$.true_list;
@@ -605,6 +611,14 @@ ebarateSade:
         $$ = $1;
     }
     ;
+
+    mForBP:
+    LAMBDA
+    {
+        $$ = next_quad();
+    }
+    ;
+
 ebarateRabetei:
     ebarateRiaziManteghi
     {
@@ -616,6 +630,7 @@ ebarateRabetei:
         
         printf("Rule 72 \t\t ebarateRabetei -> ebarateRiaziManteghi amalgareRabetei(%d) ebarateRiaziManteghi \n", $2);
         char op[3];
+
         switch($2)
         {
             case GT_OP_CONST:
@@ -642,13 +657,15 @@ ebarateRabetei:
                 exit(-1);
         }
         
+        $$.true_list = bp_make_list(next_quad());
+        $$.false_list = bp_make_list(next_quad() + 1);
         // quad_add($1.code);
         // quad_add($3.code);
         
         char if_condition[strlen($1.place) + strlen($3.place) + 100];
         sprintf(if_condition, "(%s %s %s)", $1.place, op, $3.place);
         quad_add4("if", if_condition, "goto", "_");
-
+        quad_add4("", "", "goto", "_");
         // sprintf($$.code, "if %s %s %s goto %s \ngoto %s", $1.place, $2.place, $3.place, $$.true_list, $$.false_list);
     }
     ;
