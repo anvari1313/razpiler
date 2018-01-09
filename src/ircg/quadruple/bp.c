@@ -37,7 +37,7 @@ void bp_backpatch(LLList list, int i)
                 if (q->index == index)
                 {
                     q->arg4 = malloc(20 * sizeof(char));
-                    sprintf(q->arg4, "%d", i);
+                    sprintf(q->arg4, _QUAD_LABEL_PATTERN, i);
                 }
             }while(lllist_step_forward(list));
         }while (lllist_step_forward(quad_list));
