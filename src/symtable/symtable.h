@@ -4,6 +4,9 @@
 #include "../util/llstack/llstack.h"
 #include "../util/lllist/lllist.h"
 
+#define __const_symtable_segment_link_pattern "CONST_SEGMENT_%d"
+#define __const_symtable_segment_return_link_pattern "CONST_SEGMENT_RETURN_%d"
+
 #define __ACCESS_LINK_LABEL_LEN 50
 
 #define SYMBOL_TYPE_VOID 0
@@ -28,9 +31,13 @@ typedef struct {
     bool is_const_val;
 } *Symbol, Symbol_t;
 
+int function_counter;
+
 typedef struct {
     char *name;
     char *access_link;
+    char *const_symtable_segment_link;
+    char *const_symtable_segment_return_link;
     int call_counter;
     LLList function_params;
     int function_params_size;

@@ -85,6 +85,7 @@ void symtable_init()
     lllist_init(&functions_params_list);
     temp_symbol_counter = 0;
     const_symbol_counter = 0;
+    function_counter = 0;
 }
 
 void start_function_list()
@@ -106,6 +107,12 @@ FunctionBlock new_function(char *name, unsigned char type)
     fb->function_params = functions_params_list;
     fb->function_params_size = functions_params_list->size;
     fb->call_counter = 0;
+    char *const_symtable_segment_link = malloc(100 * sizeof(char));
+    char *const_symtable_segment_return_link = malloc(100 * sizeof(char));
+    sprintf(const_symtable_segment_link, __const_symtable_segment_link_pattern, function_counter);
+    fb->const_symtable_segment_link = const_symtable_segment_link;
+    sprintf(const_symtable_segment_return_link, __const_symtable_segment_return_link_pattern, function_counter);
+    fb->const_symtable_segment_return_link = const_symtable_segment_return_link;
     lllist_init(&(fb->constant_symbols));
     fb->function_symbols_size = 0;
     fb->access_link = malloc(__ACCESS_LINK_LABEL_LEN * sizeof(char));
@@ -113,7 +120,7 @@ FunctionBlock new_function(char *name, unsigned char type)
     llstack_init(&(fb->function_scope));
     fb->return_val = malloc(sizeof(Symbol_t));
     fb->return_val->type = type;
-
+    function_counter ++;
     lllist_push_front(functions_list, fb);
 
     return fb;
