@@ -37,5 +37,6 @@ void set_output_stack_size(int);
 void quad_print();
 void quad_export(void (*print_function)(char *));
 char *quad_label_gen(Quad);
+void qaud_add_const_symbols(FunctionBlock);
 
 #endif //RAZPILER_QUAD_H

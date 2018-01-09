@@ -158,18 +158,6 @@ void quad_export(void (*print_function)(char *))
         print_function(f_attr_str_symbols);
         print_function("\n\n");
 
-        LLList const_assignment_list = get_const_assingment_strs(fb);
-        lllist_go_first(const_assignment_list);
-
-        do{
-            char *const_assignment_list_item = lllist_get_current(const_assignment_list);
-
-            char symbol_assignment_str[strlen(const_assignment_list_item) + 100];
-            sprintf(symbol_assignment_str, "\t%s;\n", const_assignment_list_item);
-
-            print_function(symbol_assignment_str);
-
-        }while (lllist_step_forward(const_assignment_list));
     }while(lllist_step_forward(functions_list));
 
     /**
@@ -276,4 +264,23 @@ Quad quad_add_no_line(char * str)
     Quad q = quad_add(str);
     q->index = -1;
     return q;
+}
+
+
+void qaud_add_const_symbols(FunctionBlock fb)
+{
+    quad_add_no_line("////// some is here is logged");
+    LLList const_assignment_list = get_const_assingment_strs(fb);
+    lllist_go_first(const_assignment_list);
+
+    do{
+        char *const_assignment_list_item = lllist_get_current(const_assignment_list);
+
+        char symbol_assignment_str[strlen(const_assignment_list_item) + 100];
+        sprintf(symbol_assignment_str, "\t%s;\n", const_assignment_list_item);
+
+        quad_add_no_line(symbol_assignment_str);
+
+    }while (lllist_step_forward(const_assignment_list));
+    quad_add_no_line("////// some is here is logged");
 }
