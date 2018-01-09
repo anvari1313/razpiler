@@ -24,6 +24,12 @@
     #define DIVIDE_OP_CONST 3
     #define PERCENT_OP_CONST 4
 
+    #define GT_OP_CONST 5
+    #define GT_EQ_OP_CONST 6
+    #define EQ_EQ_OP_CONST 7
+    #define LT_OP_CONST 8
+    #define LT_EQ_OP_CONST 9
+
 
     int label_counter = 0;
     int temp_counter = 0;
@@ -63,16 +69,22 @@
     float floatval;
     int intval;
     unsigned char operator;
+    struct {
+        char *const_symtable_segment_link;
+        char *const_symtable_segment_return_link;
+        char *function_name;
+    }const_segment_labels;
 }
 
 %token PROGRAM_KW STRUCT_KW CONST_KW INTEGER_KW REAL_KW BOOLEAN_KW CHARACTER_KW IF_KW THEN_KW ELSE_KW SWITCH_KW END_KW STATE_KW DEFAULT_KW WHEN_KW RETURN_KW BREAK_KW OR_KW AND_KW NOT_KW XOR_KW ANDTHEN_KW SEMICOLON COLON COMMA OPEN_BRACKET CLOSE_BRACKET OPEN_CURLY_BRACES CLOSE_CURLY_BRACES OPEN_PARENTHESIS CLOSE_PARENTHESIS DOT LT_OP GT_OP EQ_OP PLUS_PLUS_OP MINUS_MINUS_OP PLUS_OP MINUS_OP MULTIPLY_OP DIVIDE_OP QUESTIONMARK_OP PERCENT_OP IDENTIFIER NUMBER CONST_CHAR REAL_NUMBER BOOLEAN_FALSE BOOLEAN_TRUE
 
-%type <eval> ebarateSade ebarat ebarateRabetei ebarateRiaziManteghi amalgareRabetei taghirpazir amel ebarateYegani IDENTIFIER taghirNApazir meghdareSabet
+%type <eval> ebarateSade ebarat ebarateRabetei ebarateRiaziManteghi taghirpazir amel ebarateYegani IDENTIFIER taghirNApazir meghdareSabet
 %type <id_type> jens jenseMahdud
 %type <label> startOFWhile
 %type <intval> NUMBER
 %type <floatval> REAL_NUMBER
-%type <operator> amalgareRiazi
+%type <operator> amalgareRiazi amalgareRabetei
+%type <const_segment_labels> functionHeader
 
 %left AND_KW
 %left OR_KW
@@ -240,7 +252,14 @@ tarifeShenaseyeMoteghayyer:
 tarifeTabe:
     functionHeader mForStartFunction jomle mForEndFunction
     {
-        printf("Function is reduces\n");
+        printf("Function(%s) is reduces (%s, %s)\n", $1.function_name ,$1.const_symtable_segment_link, $1.const_symtable_segment_return_link);
+        char *label_const_seg_str = malloc(500 * sizeof (char));
+        sprintf(label_const_seg_str, "%s:", $1.const_symtable_segment_link);
+        char *return_const_seg_str = malloc(500 * sizeof (char));
+        quad_add_no_line(label_const_seg_str);
+        qaud_add_const_symbols(function_enviroment($1.function_name));
+        sprintf(return_const_seg_str, "goto %s;", $1.const_symtable_segment_return_link);
+        quad_add_no_line(return_const_seg_str);
     }
     ;
 
@@ -248,7 +267,15 @@ functionHeader:
     jens IDENTIFIER OPEN_PARENTHESIS mForStartFunctionPrams vorudi mForEndFunctionPrams CLOSE_PARENTHESIS
     {
         FunctionBlock fb = new_function($2.text , $1);
-        quad_add_function_definition(fb);
+        $$.const_symtable_segment_link = fb->const_symtable_segment_link;
+        $$.const_symtable_segment_return_link = fb->const_symtable_segment_return_link;
+        $$.function_name = $2.text;
+        char *goto_const_seg_str = malloc(500 * sizeof (char));
+        sprintf(goto_const_seg_str, "goto %s;", fb->const_symtable_segment_link);
+        char *return_const_seg_str = malloc(500 * sizeof (char));
+        quad_add_no_line(goto_const_seg_str);
+        sprintf(return_const_seg_str, "%s:", fb->const_symtable_segment_return_link);
+        quad_add_no_line(return_const_seg_str);
         printf("Rule 24 \t\t tarifeTabe -> jens IDENTIFIER(%s) OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle \n", $2.text);
     }
     |
@@ -587,48 +614,69 @@ ebarateRabetei:
     | ebarateRiaziManteghi amalgareRabetei ebarateRiaziManteghi
     {
         
-        printf("Rule 72 \t\t ebarateRabetei -> ebarateRiaziManteghi amalgareRabetei ebarateRiaziManteghi \n");
+        printf("Rule 72 \t\t ebarateRabetei -> ebarateRiaziManteghi amalgareRabetei(%d) ebarateRiaziManteghi \n", $2);
+        char op[3];
+        switch($2)
+        {
+            case GT_OP_CONST:
+                strcpy(op, ">");
+                break;
 
-        $$.code = malloc(sizeof(char) * 100);
+            case GT_EQ_OP_CONST:
+                strcpy(op, ">=");
+                break;
 
-        sprintf($$.code, "if %s %s %s goto %s \ngoto %s", $1.place, $2.place, $3.place, $$.true_list, $$.false_list);
+            case EQ_EQ_OP_CONST:
+                strcpy(op, "==");
+                break;
+            
+            case LT_OP_CONST:
+                strcpy(op, "<");
+                break;
+
+            case LT_EQ_OP_CONST:
+                strcpy(op, "<=");
+                break;
+            default:
+                printf("ERROR IN OPERATOR IN RULE 72\n");
+                exit(-1);
+        }
+        
+        // quad_add($1.code);
+        // quad_add($3.code);
+        
+        char if_condition[strlen($1.place) + strlen($3.place) + 100];
+        sprintf(if_condition, "(%s %s %s)", $1.place, op, $3.place);
+        quad_add4("if", if_condition, "goto", "_");
+
+        // sprintf($$.code, "if %s %s %s goto %s \ngoto %s", $1.place, $2.place, $3.place, $$.true_list, $$.false_list);
     }
     ;
 amalgareRabetei:
     LT_OP
     {
         printf("Rule 73 \t\t amalgareRabetei -> LT_OP \n");
-
-        $$.place = malloc(sizeof(char) * 5);
-        sprintf($$.text, "<");
+        $$ = LT_OP_CONST;
     }
     | LT_OP EQ_OP
     {
         printf("Rule 74 \t\t amalgareRabetei -> LT_OP EQ_OP \n");
-
-        $$.place = malloc(sizeof(char) * 5);
-        sprintf($$.text, "<=");
+        $$ = LT_EQ_OP_CONST;
     }
     | EQ_OP EQ_OP
     {
         printf("Rule 75 \t\t amalgareRabetei -> EQ_OP EQ_OP \n");
-
-        $$.place = malloc(sizeof(char) * 5);
-        sprintf($$.text, "==");
+        $$ = EQ_EQ_OP_CONST;
     }
     | GT_OP EQ_OP
     {
         printf("Rule 76 \t\t amalgareRabetei -> GT_OP EQ_OP \n");
-
-        $$.place = malloc(sizeof(char) * 5);
-        sprintf($$.text, ">=");
+        $$ = GT_EQ_OP_CONST;
     }
     | GT_OP
     {
         printf("Rule 77 \t\t amalgareRabetei -> GT_OP \n");
-
-        $$.place = malloc(sizeof(char) * 5);
-        sprintf($$.text, ">");
+        $$ = GT_OP_CONST;
     }
     ;
 ebarateRiaziManteghi:
