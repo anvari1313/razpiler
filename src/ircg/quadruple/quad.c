@@ -107,7 +107,7 @@ void quad_export(void (*print_function)(char *))
     print_function(        "    void *control_link;\n");
     print_function(        "} function;\n\n");
 
-    print_function("// Stack part");
+    print_function("// Stack part\n");
     char stack_out_str[100];
     sprintf(stack_out_str, "function stack[%d];\n", output_stack_size);
     print_function(stack_out_str);
@@ -167,7 +167,7 @@ void quad_export(void (*print_function)(char *))
     if (main_fb == NULL)
         main_not_found();
 
-    quad_call_function(main_fb);
+
 
 
     lllist_go_first(quad_list);
@@ -283,4 +283,36 @@ void qaud_add_const_symbols(FunctionBlock fb)
 
     }while (lllist_step_forward(const_assignment_list));
     quad_add_no_line("////// some is here is logged");
+}
+
+void quad_call_function_main()
+{
+    quad_call_function(function_enviroment(STARTING_POINT_FUNCTION));
+//    FunctionBlock main = malloc(sizeof(FunctionBlock_t));
+//
+//    main->name = malloc((strlen(STARTING_POINT_FUNCTION) + 1) * sizeof(char));
+//    strcpy(main->name, STARTING_POINT_FUNCTION);
+//
+////    FunctionBlock fb = malloc(sizeof(FunctionBlock_t));
+//
+//
+//    fb->function_params = functions_params_list;
+//    fb->function_params_size = functions_params_list->size;
+//    fb->call_counter = 0;
+//    char *const_symtable_segment_link = malloc(100 * sizeof(char));
+//    char *const_symtable_segment_return_link = malloc(100 * sizeof(char));
+//    sprintf(const_symtable_segment_link, __const_symtable_segment_link_pattern, function_counter);
+//    fb->const_symtable_segment_link = const_symtable_segment_link;
+//    sprintf(const_symtable_segment_return_link, __const_symtable_segment_return_link_pattern, function_counter);
+//    fb->const_symtable_segment_return_link = const_symtable_segment_return_link;
+//    lllist_init(&(fb->constant_symbols));
+//    fb->function_symbols_size = 0;
+//    fb->access_link = malloc(__ACCESS_LINK_LABEL_LEN * sizeof(char));
+//    sprintf(fb->access_link, "fal%d", functions_list->size);
+//    llstack_init(&(fb->function_scope));
+//    fb->return_val = malloc(sizeof(Symbol_t));
+//    fb->return_val->type = type;
+//    function_counter ++;
+//    lllist_push_front(functions_list, fb);
+
 }
