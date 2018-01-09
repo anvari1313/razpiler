@@ -6,9 +6,24 @@
     #include "../ircg/quadruple/quad.h"
     #include "../ircg/error/error.h"
 
+    // #ifndef max
+	    #define max( a, b ) ( ((a) > (b)) ? (a) : (b) )
+    // #endif
+
+    // #ifnef min
+	    #define min( a, b ) ( ((a) < (b)) ? (a) : (b) )
+    // #endif
+
     #define ALLOC_STR(str_size) (char *)malloc((str_size + 1) * sizeof(char) )
     extern char* yytext;
     void yyerror(const char *s);
+
+    #define PLUS_OP_CONST 0
+    #define MINUS_OP_CONST 1
+    #define MULTIPLY_OP_CONST 2
+    #define DIVIDE_OP_CONST 3
+    #define PERCENT_OP_CONST 4
+
 
     int label_counter = 0;
     int temp_counter = 0;
@@ -47,6 +62,7 @@
     char *label;
     float floatval;
     int intval;
+    unsigned char operator;
 }
 
 %token PROGRAM_KW STRUCT_KW CONST_KW INTEGER_KW REAL_KW BOOLEAN_KW CHARACTER_KW IF_KW THEN_KW ELSE_KW SWITCH_KW END_KW STATE_KW DEFAULT_KW WHEN_KW RETURN_KW BREAK_KW OR_KW AND_KW NOT_KW XOR_KW ANDTHEN_KW SEMICOLON COLON COMMA OPEN_BRACKET CLOSE_BRACKET OPEN_CURLY_BRACES CLOSE_CURLY_BRACES OPEN_PARENTHESIS CLOSE_PARENTHESIS DOT LT_OP GT_OP EQ_OP PLUS_PLUS_OP MINUS_MINUS_OP PLUS_OP MINUS_OP MULTIPLY_OP DIVIDE_OP QUESTIONMARK_OP PERCENT_OP IDENTIFIER NUMBER CONST_CHAR REAL_NUMBER BOOLEAN_FALSE BOOLEAN_TRUE
@@ -56,6 +72,7 @@
 %type <label> startOFWhile
 %type <intval> NUMBER
 %type <floatval> REAL_NUMBER
+%type <operator> amalgareRiazi
 
 %left AND_KW
 %left OR_KW
@@ -230,13 +247,15 @@ tarifeTabe:
 functionHeader:
     jens IDENTIFIER OPEN_PARENTHESIS mForStartFunctionPrams vorudi mForEndFunctionPrams CLOSE_PARENTHESIS
     {
-        new_function($2.text , $1);
+        FunctionBlock fb = new_function($2.text , $1);
+        quad_add_function_definition(fb);
         printf("Rule 24 \t\t tarifeTabe -> jens IDENTIFIER(%s) OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle \n", $2.text);
     }
     |
     IDENTIFIER OPEN_PARENTHESIS mForStartFunctionPrams vorudi mForEndFunctionPrams CLOSE_PARENTHESIS
     {
-        new_function($1.text , SYMBOL_TYPE_VOID);
+        // FunctionBlock fb = new_function($1.text , $1);
+        // quad_add_function_definition(fb);
         printf("Rule 25 \t\t tarifeTabe -> IDENTIFIER(%s) OPEN_PARENTHESIS vorudi CLOSE_PARENTHESIS jomle \n", $1.text);
     }
     ;
@@ -370,8 +389,8 @@ jomleha:
 jomleyeEbarat:
     ebarat SEMICOLON
     {
+        quad_add($1.code);
         printf("Rule 44 \t\t jomleyeEbarat -> ebarat SEMICOLON \n");
-        // quad_add($1.code);
     }
     | SEMICOLON
     {
@@ -449,6 +468,11 @@ jomleyeShekast:
 ebarat:
     taghirpazir EQ_OP ebarat
     {
+        char gen_code[500];
+        sprintf(gen_code, "%s\n%s = %s;", $3.code, $1.place, $3.place);
+        $$.code = gen_code;
+        $$.place = $1.place;
+        $$.type = max($1.type, $3.type);
         printf("Rule 57 \t\t ebarat -> taghirpazir EQ_OP ebarat \n");
         // SymbolNode node = install_temp_id($1.type);
         // $$.place = ALLOC_STR(strlen(node->symbol_id) + 2);
@@ -553,7 +577,6 @@ ebarateSade:
     {
         printf("Rule 70 \t\t ebarateSade -> ebarateRabetei \n");
         $$ = $1;
-        $$.code = "$1.code";
     }
     ;
 ebarateRabetei:
@@ -617,28 +640,68 @@ ebarateRiaziManteghi:
     }
     | ebarateRiaziManteghi amalgareRiazi ebarateRiaziManteghi
     {
-        printf("Rule 79 \t\t ebarateRiaziManteghi -> ebarateRiaziManteghi amalgareRiazi ebarateRiaziManteghi \n");
+        char gen_code[500];
+
+        char op;
+        switch($2)
+        {
+            case PLUS_OP_CONST:
+                op = '+';
+                break;
+
+            case MINUS_OP_CONST:
+                op = '-';
+                break;
+
+            case MULTIPLY_OP_CONST:
+                op = '*';
+                break;
+            
+            case DIVIDE_OP_CONST:
+                op = '/';
+                break;
+
+            case PERCENT_OP_CONST:
+                op = '%';
+                break;
+            default:
+                printf("ERROR IN OPERATOR IN RULE 79\n");
+                exit(-1);
+        }
+        int res_type = max($1.type, $3.type);
+        Symbol s = add_temp_symbol(res_type);
+        char *res_place = enviroment(s->name);
+        $$.type = res_type;
+        $$.place = res_place;
+        sprintf(gen_code, "%s\n%s\n%s = %s %c %s;", $1.code, $3.code, res_place, $1.place, op, $3.place);
+        $$.code = gen_code;
+        printf("Rule 79 \t\t ebarateRiaziManteghi -> ebarateRiaziManteghi(%s) amalgareRiazi(%d) ebarateRiaziManteghi(%s) \n",$1.code, $2, $3.place);
     }
     ;
 amalgareRiazi:
     PLUS_OP
     {
+        $$ = PLUS_OP_CONST;
         printf("Rule 80 \t\t amalgareRiazi -> PLUS_OP \n");
     }
     | MINUS_OP
     {
+        $$ = MINUS_OP_CONST;
         printf("Rule 81 \t\t amalgareRiazi -> MINUS_OP \n");
     }
     | MULTIPLY_OP
     {
+        $$ = MULTIPLY_OP_CONST;
         printf("Rule 82 \t\t amalgareRiazi -> MULTIPLY_OP \n");
     }
     | DIVIDE_OP
     {
+        $$ = DIVIDE_OP_CONST;
         printf("Rule 83 \t\t amalgareRiazi -> DIVIDE \n");
     }
     | PERCENT_OP
     {
+        $$ = PERCENT_OP_CONST;
         printf("Rule 84 \t\t amalgareRiazi -> PERCENT_OP \n");
     }
     ;
@@ -650,7 +713,6 @@ ebarateYegani:
     | amel
     {
         printf("Rule 86 \t\t ebarateYegani -> amel \n");
-
         $$ = $1;
     }
     ;
@@ -678,7 +740,6 @@ amel:
     | taghirNApazir
     {
         printf("Rule 91 \t\t amel -> taghirNApazir \n");
-
         $$ = $1;
     }
     ;
@@ -686,6 +747,9 @@ taghirpazir:
     IDENTIFIER
     {
         printf("Rule 92 \t\t taghirpazir -> IDENTIFIER(%s) \n", $1.text);
+        
+        $$.place = enviroment($1.text);
+
         
         // SymbolNode node = search_id($1.text);
         // if (node == NULL)
@@ -721,6 +785,7 @@ taghirNApazir:
     }
     | meghdareSabet
     {
+        $$ = $1;
         printf("Rule 97 \t\t taghirNApazir -> meghdareSabet \n");
     }
     ;
@@ -756,7 +821,7 @@ meghdareSabet:
         union Value v;
         v.intval = $1;
         $$.place = add_const_symbol(v, SYMBOL_TYPE_INT);
-
+        $$.code = "";
         printf("Rule 103 \t\t meghdareSabet -> NUMBER(%d) \n", $1);
     }
     | REAL_NUMBER
@@ -764,11 +829,15 @@ meghdareSabet:
         union Value v;
         v.floatval = $1;
         $$.place = add_const_symbol(v, SYMBOL_TYPE_REAL);
-
+        $$.code = "";
         printf("Rule 104 \t\t meghdareSabet -> REAL_NUMBER \n");
     }
     | CONST_CHAR
     {
+        $$.type = SYMBOL_TYPE_CHAR;
+        union Value v;
+        v.charval = 'c';
+        $$.code = "";
         printf("Rule 105 \t\t meghdareSabet -> CONST_CHAR \n");
     }
     | BOOLEAN_TRUE
@@ -776,6 +845,8 @@ meghdareSabet:
         union Value v;
         v.boolval = false;
         $$.place = add_const_symbol(v, SYMBOL_TYPE_BOOL);
+        $$.type = SYMBOL_TYPE_BOOL;
+        $$.code = "";
         printf("Rule 106 \t\t meghdareSabet -> BOOLEAN_TRUE \n");
     }
     | BOOLEAN_FALSE
@@ -783,6 +854,8 @@ meghdareSabet:
         union Value v;
         v.boolval = false;
         $$.place = add_const_symbol(v, SYMBOL_TYPE_BOOL);
+        $$.type = SYMBOL_TYPE_BOOL;
+        $$.code = "";
         printf("Rule 107 \t\t meghdareSabet -> BOOLEAN_FALSE \n");
     }
     ;
