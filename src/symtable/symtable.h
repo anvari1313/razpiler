@@ -8,9 +8,10 @@
 
 #define SYMBOL_TYPE_VOID 0
 #define SYMBOL_TYPE_BOOL 10
-#define SYMBOL_TYPE_INT 20
-#define SYMBOL_TYPE_REAL 30
-#define SYMBOL_TYPE_CHAR 40
+#define SYMBOL_TYPE_CHAR 20
+#define SYMBOL_TYPE_INT 30
+#define SYMBOL_TYPE_REAL 40
+
 
 union Value {
     bool boolval;
@@ -30,11 +31,13 @@ typedef struct {
 typedef struct {
     char *name;
     char *access_link;
+    int call_counter;
     LLList function_params;
     int function_params_size;
     LLStack function_scope;
     int function_symbols_size;
     Symbol return_val;
+    LLList constant_symbols;
 } *FunctionBlock, FunctionBlock_t;
 
 LLList functions_list;
@@ -47,13 +50,17 @@ void symtable_init();
 void start_function_list();
 void new_function_param(char *, unsigned char);
 FunctionBlock new_function(char *, unsigned char);
+FunctionBlock function_enviroment(char *);
 void start_scope();
 Symbol add_symbol(char *, unsigned char);
+Symbol add_temp_symbol(unsigned char);
+char *symbol_address(Symbol s);
 char *add_const_symbol(union Value value, unsigned char);
 void end_scope();
 Symbol search_for_symbol(char *);
 Symbol search_for_param(char *);
 char *enviroment(char *);
+LLList get_const_assingment_strs(FunctionBlock fb);
 
 ///////////////////////////
 LLList symbols_list;

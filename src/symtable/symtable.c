@@ -105,6 +105,8 @@ FunctionBlock new_function(char *name, unsigned char type)
     strcpy(fb->name, name);
     fb->function_params = functions_params_list;
     fb->function_params_size = functions_params_list->size;
+    fb->call_counter = 0;
+    lllist_init(&(fb->constant_symbols));
     fb->function_symbols_size = 0;
     fb->access_link = malloc(__ACCESS_LINK_LABEL_LEN * sizeof(char));
     sprintf(fb->access_link, "fal%d:", functions_list->size);
@@ -137,6 +139,7 @@ Symbol add_symbol(char *name, unsigned char type)
     s->id = current_fb->function_symbols_size++;
     s->name = malloc((strlen(name) + 1) * sizeof(char));
     strcpy(s->name, name);
+    s->is_const_val = false;
     s->type = type;
 
     lllist_push_front((LLList)llstack_top(current_fb->function_scope), s);
@@ -279,11 +282,74 @@ Symbol search_for_param(char *name)
 }
 
 char *add_const_symbol(union Value value, unsigned char type) {
+    lllist_go_last(functions_list);
+    FunctionBlock current_fb = (FunctionBlock)lllist_get_current(functions_list);
+    LLList constant = current_fb->constant_symbols;
+
     char *const_symbol_name = malloc(20 * sizeof(char));
     sprintf(const_symbol_name, "c%d", const_symbol_counter ++);
     Symbol s = add_symbol(const_symbol_name, type);
     s->is_const_val = true;
     s->const_val = value;
+
+    lllist_push_front(constant, s);
+
     return enviroment(const_symbol_name);;
 }
 
+LLList get_const_assingment_strs(FunctionBlock fb)
+{
+    LLList result;
+    lllist_init(&result);
+
+    LLList const_list = fb->constant_symbols;
+    lllist_go_first(const_list);
+    do{
+        Symbol s = lllist_get_current(const_list);
+        char *sym_address = symbol_address(s);
+        char *assignment_str = malloc((strlen(sym_address) + 100) * sizeof(char));
+
+        switch (s->type)
+        {
+            case SYMBOL_TYPE_BOOL:
+                sprintf(assignment_str, "%s = %d", sym_address, s->const_val.boolval);
+                break;
+            case SYMBOL_TYPE_INT:
+                sprintf(assignment_str, "%s = %d", sym_address, s->const_val.intval);
+                break;
+            case SYMBOL_TYPE_REAL:
+                sprintf(assignment_str, "%s = %f", sym_address, s->const_val.floatval);
+                break;
+            case SYMBOL_TYPE_CHAR:
+                sprintf(assignment_str, "%s = %d", sym_address, s->const_val.charval);
+                break;
+        }
+        lllist_push_front(result, assignment_str);
+
+    }while (lllist_step_forward(const_list));
+
+    return result;
+}
+
+Symbol add_temp_symbol(unsigned char type)
+{
+    char temp_name[100];
+    sprintf(temp_name, "temp%d", temp_counter ++);
+    return add_symbol(temp_name, type);
+}
+
+FunctionBlock function_enviroment(char *name)
+{
+    FunctionBlock result = NULL;
+    lllist_go_first(functions_list);
+    do{
+        FunctionBlock fb = lllist_get_current(functions_list);
+        if (strcmp(fb->name, name) == 0)
+        {
+            result = fb;
+            break;
+        }
+    }while(lllist_step_forward(functions_list));
+
+    return result;
+}
