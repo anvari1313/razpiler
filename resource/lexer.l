@@ -341,7 +341,9 @@ CONST_CHAR [\'][\\]?{CHARACTER}[\']
 {WHEN_KW} {add_node(yytext, TYPE_WHEN_KW); return WHEN_KW;}
 {RETURN_KW} {add_node(yytext, TYPE_RETURN_KW); return RETURN_KW;}
 {BREAK_KW} {add_node(yytext, TYPE_BREAK_KW); return BREAK_KW;}
-
+{COMMENT} {
+    printf("this is comment\n");
+}
 
 {WHITESPACE} { column += yyleng; }
 {IDENTIFIER} {
