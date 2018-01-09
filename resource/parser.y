@@ -95,12 +95,12 @@ startProgram:
     LAMBDA
     {
         lllist_init(&identifiers_list);
-        quad_add("// This is strt of file\n");
+        quad_add_no_line("// This is strt of file\n");
     };
 endProgram:
     LAMBDA
     {
-        quad_add("// This is end of file\n");
+        quad_add_no_line("// This is end of file\n");
     };
 
 tarifha:
@@ -526,7 +526,6 @@ ebarateSade:
         // sprintf($$.code, "%s %s:%s", $1.code, $1.false_list, $3.code);
 
         // printf("\n\n%s\n\n", $$.code);
-        printf("Log1\n");
         // SymbolNode node = install_temp_id($1.type);
         
         $$.type = $1.type;
@@ -674,6 +673,8 @@ ebarateRiaziManteghi:
         $$.type = res_type;
         $$.place = res_place;
         sprintf(gen_code, "%s\n%s\n%s = %s %c %s;", $1.code, $3.code, res_place, $1.place, op, $3.place);
+        printf("$1.place  = %s\n", $1.place);
+        printf("$3.place  = %s\n", $3.place);
         $$.code = gen_code;
         printf("Rule 79 \t\t ebarateRiaziManteghi -> ebarateRiaziManteghi(%s) amalgareRiazi(%d) ebarateRiaziManteghi(%s) \n",$1.code, $2, $3.place);
     }
@@ -749,21 +750,6 @@ taghirpazir:
         printf("Rule 92 \t\t taghirpazir -> IDENTIFIER(%s) \n", $1.text);
         
         $$.place = enviroment($1.text);
-
-        
-        // SymbolNode node = search_id($1.text);
-        // if (node == NULL)
-        // {
-        //     error_id_not_declared($1.text);
-        //     $$.place = NULL;
-        // }
-        // else
-        // {
-        //     // $$.place = ALLOC_STR((strlen(node->symbol_id) + 1) * sizeof(char));
-        //     // strcpy($$.place, node->symbol_id);
-        //     // printf("place is %s\n", $$.place);
-        //     // $$.type = node->symbol_type;
-        // }
     }
     | taghirpazir OPEN_BRACKET ebarat CLOSE_BRACKET
     {
@@ -778,6 +764,7 @@ taghirNApazir:
     OPEN_PARENTHESIS ebarat CLOSE_PARENTHESIS
     {
         printf("Rule 95 \t\t taghirNApazir -> OPEN_PARENTHESIS ebarat CLOSE_PARENTHESIS \n");
+        $$ = $2;
     }
     | sedaZadan
     {
