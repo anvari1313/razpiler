@@ -12,7 +12,10 @@ void lllist_init(LLList *lllist)
 
 bool lllist_is_empty(LLList lllist)
 {
-    return ((lllist->__first_node == NULL) && (lllist->__last_node == NULL)) || (lllist->size == 0);
+    if (lllist == NULL)
+        return true;
+    else
+        return ((lllist->__first_node == NULL) && (lllist->__last_node == NULL)) || (lllist->size == 0);
 }
 
 void lllist_push_back(LLList lllist, LLListData lllist_data)
@@ -117,6 +120,8 @@ void lllist_release(LLList *lllist)
 
 void lllist_concat(LLList list1, LLList list2)
 {
+    if ((!list1) && (!list2))
+        return;
     list1->__last_node->__ll_next = list2->__first_node;
     list2->__first_node->__ll_last = list1->__last_node;
     list1->size += list2->size;
