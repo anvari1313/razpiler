@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "quad.h"
 #include "bp.h"
+#include "../../symtable/symtable.h"
 
 extern LLList quad_list;
 
@@ -24,6 +25,7 @@ LLList bp_merge(LLList list1, LLList list2)
 
 void bp_backpatch(LLList list, int i)
 {
+    lllist_go_last(quad_list);
     if (! (lllist_is_empty(quad_list) || lllist_is_empty(list)))
     {
         lllist_go_first(quad_list);
