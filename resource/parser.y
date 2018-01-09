@@ -1,4 +1,5 @@
 %{
+    #include <stdbool.h>
     #include <stdio.h>
     #include <stdlib.h>
     #include "../util/lllist/lllist.h"
@@ -30,6 +31,7 @@
     #define LT_OP_CONST 8
     #define LT_EQ_OP_CONST 9
 
+    bool is_main_called = false;
 
     int label_counter = 0;
     int temp_counter = 0;
@@ -262,12 +264,14 @@ tarifeTabe:
         qaud_add_const_symbols(function_enviroment($1.function_name));
         sprintf(return_const_seg_str, "goto %s;", $1.const_symtable_segment_return_link);
         quad_add_no_line(return_const_seg_str);
+        if (! is_main_called) {quad_call_function_main(); is_main_called = true;}
     }
     ;
 
 functionHeader:
     jens IDENTIFIER OPEN_PARENTHESIS mForStartFunctionPrams vorudi mForEndFunctionPrams CLOSE_PARENTHESIS
     {
+        
         FunctionBlock fb = new_function($2.text , $1);
         $$.const_symtable_segment_link = fb->const_symtable_segment_link;
         $$.const_symtable_segment_return_link = fb->const_symtable_segment_return_link;
@@ -899,6 +903,11 @@ meghdareSabet:
         $$.place = add_const_symbol(v, SYMBOL_TYPE_BOOL);
         $$.type = SYMBOL_TYPE_BOOL;
         $$.code = "";
+        $$.true_list = bp_make_list(next_quad());
+        LLList empty_list;
+        lllist_init(&empty_list);
+        $$.false_list = empty_list;
+        quad_add4("", "", "goto", "_");
         printf("Rule 106 \t\t meghdareSabet -> BOOLEAN_TRUE \n");
     }
     | BOOLEAN_FALSE
@@ -908,6 +917,11 @@ meghdareSabet:
         $$.place = add_const_symbol(v, SYMBOL_TYPE_BOOL);
         $$.type = SYMBOL_TYPE_BOOL;
         $$.code = "";
+        $$.false_list = bp_make_list(next_quad());
+        LLList empty_list;
+        lllist_init(&empty_list);
+        $$.true_list = empty_list;
+        quad_add4("", "", "goto", "_");
         printf("Rule 107 \t\t meghdareSabet -> BOOLEAN_FALSE \n");
     }
     ;
