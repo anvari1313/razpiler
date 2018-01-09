@@ -109,7 +109,7 @@ FunctionBlock new_function(char *name, unsigned char type)
     lllist_init(&(fb->constant_symbols));
     fb->function_symbols_size = 0;
     fb->access_link = malloc(__ACCESS_LINK_LABEL_LEN * sizeof(char));
-    sprintf(fb->access_link, "fal%d:", functions_list->size);
+    sprintf(fb->access_link, "fal%d", functions_list->size);
     llstack_init(&(fb->function_scope));
     fb->return_val = malloc(sizeof(Symbol_t));
     fb->return_val->type = type;
