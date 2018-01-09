@@ -62,3 +62,7 @@ fabric.properties
 #My ignorance
 output/*
 !output/.gitkeep
+
+src/scanner/lex.yy.c
+src/scanner/parser.tab.h
+src/scanner/parser.tab.c
