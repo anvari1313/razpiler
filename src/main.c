@@ -37,20 +37,25 @@ int *f(int a)
 //    llstack_init(&s2);
 //
 //}
+
+FILE *output_file;
+
+void print(char *str)
+{
+    fprintf(output_file, str);
+}
+
 int main()
 {
-    printf("%d\n", atoi("12"));
     const char *file_path = "../resource/input2.raz";
-
+    const char *output_file_path = "../output/out.c";
 
     scan(file_path);
 
     symtable_init();
     quad_init();
 
-
-    union Value v;
-    v.boolval = true;
+    output_file = fopen(output_file_path, "w");
 
 //    char *t = add_const_symbol(v, SYMBOL_TYPE_BOOL);;
 
@@ -60,8 +65,7 @@ int main()
     parse_file(SCAN_PATH);
 //    quad_print();
 
-
-
+    quad_export(&print);
 
 
     return EXIT_SUCCESS;
