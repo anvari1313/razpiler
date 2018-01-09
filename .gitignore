@@ -58,3 +58,7 @@ fabric.properties
 .idea/misc.xml
 
 .idea/razpiler.iml
+
+#My ignorance
+output/*
+!output/.gitkeep
