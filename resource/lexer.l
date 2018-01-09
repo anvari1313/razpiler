@@ -286,12 +286,13 @@ BOOLEAN_TRUE (KMPE)
 
 WHITESPACE [\t' '\n]
 CHARACTER [A-Za-g]
+SYMBOL_CHARACTER [!@#$%^&*()-_=+]
 DIGIT [0-9]
 CHARACTER_DIGIT {CHARACTER}|{DIGIT}
 IDENTIFIER {CHARACTER}{CHARACTER_DIGIT}*
 NUMBER {DIGIT}+
 REAL_NUMBER {DIGIT}+(.){DIGIT}+
-CONST_CHAR [\'][\\]?{CHARACTER}[\']
+CONST_CHAR [\'][\\]?{CHARACTER}|{SYMBOL_CHARACTER}[\']
 %%
 
 {OR_KW} {add_node(yytext, TYPE_OR_KW); return OR_KW;}
@@ -344,7 +345,7 @@ CONST_CHAR [\'][\\]?{CHARACTER}[\']
 {RETURN_KW} {add_node(yytext, TYPE_RETURN_KW); return RETURN_KW;}
 {BREAK_KW} {add_node(yytext, TYPE_BREAK_KW); return BREAK_KW;}
 {COMMENT} {
-    printf("this is comment\n");
+    printf("this is comment: %s\n", yytext);
 }
 
 {WHITESPACE} { column += yyleng; }
