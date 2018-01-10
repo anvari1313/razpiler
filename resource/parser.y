@@ -37,6 +37,7 @@
     int temp_counter = 0;
     
     LLList identifiers_list;
+    LLList function_params;
     
     char* new_label()
     {
@@ -846,9 +847,21 @@ taghirNApazir:
     }
     ;
 sedaZadan:
-    IDENTIFIER OPEN_PARENTHESIS bordareVorudi CLOSE_PARENTHESIS
+    IDENTIFIER mForFunctionCall OPEN_PARENTHESIS bordareVorudi CLOSE_PARENTHESIS
     {
+        FunctionBlock fb = function_enviroment($1.text);
+        if (fb == NULL)
+            error_function_not_found();
+        quad_call_function(fb, function_params);
         printf("Rule 98 \t\t sedaZadan -> IDENTIFIER(%s) OPEN_PARENTHESIS bordareVorudi CLOSE_PARENTHESIS \n", $1.text);
+    }
+    ;
+
+mForFunctionCall:
+    LAMBDA
+    {
+        // Init the function parmas list
+        lllist_init(&function_params);
     }
     ;
 bordareVorudi:
@@ -864,7 +877,7 @@ bordareVorudi:
 bordareVorudiha:
     bordareVorudiha COMMA ebarat
     {
-        printf("Rule 101 \t\t bordareVorudiha -> bordareVorudiha COMMA ebarat \n");
+        lllist_push_front($3.place);
     }
     | ebarat
     {
