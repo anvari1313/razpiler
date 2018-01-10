@@ -365,6 +365,16 @@ jomle:
     {
         printf("Rule 40 \t\t jomle -> jomleyeShekast \n");
     }
+    | jomleyeTarif
+    {
+        printf("Rule 35-ALT \t\t jomle -> jomleyeTarif\n");
+    }
+    ;
+jomleyeTarif:
+    tarifhayeMahalli
+    {
+        printf("Rule 35-ALT2 \t\t jomleyeTarif -> tarifhayeMahalli\n");
+    }
     ;
 jomleyeMorakkab:
     OPEN_CURLY_BRACES mForScope tarifhayeMahalli jomleha CLOSE_CURLY_BRACES
