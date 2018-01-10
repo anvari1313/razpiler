@@ -12,6 +12,9 @@ void std_out(const unsigned char type, const unsigned char error)
         case ERROR_MAIN_NOT_FOUND:
             printf("starting point not found\n");
             break;
+        case ERROR_FUNCTION_NOT_FOUND:
+            printf("function not found");
+            break;
     }
 
     switch (type)

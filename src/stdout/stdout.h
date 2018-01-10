@@ -7,6 +7,7 @@
 // Errors
 #define ERROR_FILE_NOT_FOUND 255
 #define ERROR_MAIN_NOT_FOUND 200
+#define ERROR_FUNCTION_NOT_FOUND 190
 
 void std_out(const unsigned char type, const unsigned char error);
 

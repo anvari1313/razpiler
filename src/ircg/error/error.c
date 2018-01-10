@@ -13,3 +13,8 @@ void main_not_found()
 {
     std_out(ERROR_TYPE_CRITICAL, ERROR_MAIN_NOT_FOUND);
 }
+
+void error_function_not_found(char *function_name)
+{
+    std_out(ERROR_TYPE_CRITICAL, ERROR_FUNCTION_NOT_FOUND);
+}
